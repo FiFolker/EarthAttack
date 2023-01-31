@@ -5,5 +5,5 @@ A chaque mauvaise réponse, le compteur recul, rapprochant notre chère planète
 A la fin vous attend une surprise ;)
 
 <div align="center">
-  <img src="https://www.google.com/url?sa=i&url=https%3A%2F%2Ftenor.com%2Fview%2Fpixel-planet-moon-gif-4805931&psig=AOvVaw2OE011edVwsFzQv-UsT3HX&ust=1675263227467000&source=images&cd=vfe&ved=0CAwQjRxqGAoTCNjwjP-H8vwCFQAAAAAdAAAAABCxAQ">
+  <img src="https://media.tenor.com/Ad6bP6CX9lAAAAAd/pixel-planet.gif>
 </div>
