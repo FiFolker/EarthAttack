@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class EarthAttack {
 
-	static final String[] FILES = {"question", "answer", "coords"};
+	static final String[] FILES = {"question", "answer", "order"};
 	static int numberOfQuestion = 10;
 	
     /**
