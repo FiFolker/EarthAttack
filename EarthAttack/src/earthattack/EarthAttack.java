@@ -57,18 +57,32 @@ public class EarthAttack {
 
 				String[] split = temp.split(";");
 
-				if (i == 0) {
-					for (int j = 0; j < split.length; j++) {
-						String[] tempSplit = split[j].split(",");
-						nameAndDesc[actualQuestion][0] = tempSplit[j];
-						nameAndDesc[actualQuestion][1] = tempSplit[j + 1];
-					}
+				
+				switch (i) {
+					case 0:
+						for (int j = 0; j < split.length; j++) {
+							String[] tempSplit = split[j].split(",");
+							nameAndDesc[actualQuestion][0] = tempSplit[0];
+							nameAndDesc[actualQuestion][1] = tempSplit[1];
+						}
+						break;
+					case 1:
+						answer = split;
+						break;
+					case 2:
+						coords = split;
+						break;
 				}
-
+				
+				
 			} catch (Exception ex) {
 				System.out.println("Exception ex : " + ex);
 				ex.printStackTrace();
 			}
+		}
+		
+		for(int i=0; i<numberOfQuestion; i++){
+			questions[i] = new Question(nameAndDesc[i][0], nameAndDesc[i][1], answer[Integer.parseInt(coords[i])]);
 		}
 
 	}
