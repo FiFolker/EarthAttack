@@ -4,10 +4,6 @@
  */
 package earthattack;
 
-/**
- *
- * @author msuzin
- */
 public class UI {
 	
 	public static void showEarth(){

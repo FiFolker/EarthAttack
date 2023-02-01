@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 
 /**
  *
- * @author msuzin
+ * @author msuzin, calmuller, ellemerle, onaib
  */
 public class EarthAttack {
 
