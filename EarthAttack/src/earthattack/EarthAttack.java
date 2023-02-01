@@ -4,6 +4,8 @@
  */
 package earthattack;
 
+import java.io.File;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -12,6 +14,9 @@ import java.util.concurrent.TimeUnit;
  */
 public class EarthAttack {
 
+	static final String[] FILES = {"question", "answer", "coords"};
+	static int numberOfQuestion = 10;
+	
     /**
      * @param args the command line arguments
      */
@@ -36,6 +41,37 @@ public class EarthAttack {
             System.out.println("Moving to next fixing step : ");
         }
     }
+	
+	public static void loadQuestions() {
+		Question[] questions = new Question[numberOfQuestion];
+		int actualQuestion = 0;
+
+		String temp = "";
+		String[][] nameAndDesc = new String[numberOfQuestion][2];
+		String[] answer = new String[numberOfQuestion];
+		String[] coords = new String[numberOfQuestion];
+
+		for (int i = 0; i < FILES.length; i++) {
+			try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
+				temp = fileRead.nextLine();
+
+				String[] split = temp.split(";");
+
+				if (i == 0) {
+					for (int j = 0; j < split.length; j++) {
+						String[] tempSplit = split[j].split(",");
+						nameAndDesc[actualQuestion][0] = tempSplit[j];
+						nameAndDesc[actualQuestion][1] = tempSplit[j + 1];
+					}
+				}
+
+			} catch (Exception ex) {
+				System.out.println("Exception ex : " + ex);
+				ex.printStackTrace();
+			}
+		}
+
+	}
 
     /**
      * Calcule le temps qui s'écoule. 
