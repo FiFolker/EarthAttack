@@ -4,6 +4,8 @@
  */
 package earthattack;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  *
  * @author msuzin
@@ -17,4 +19,16 @@ public class EarthAttack {
        
     }
     
+    static void loadingNextAnswer(boolean result) throws InterruptedException{
+        if (result){
+            System.out.println("Sending new code...");
+            TimeUnit.SECONDS.sleep(2);
+            System.out.println("Loading code...");
+            TimeUnit.SECONDS.sleep(2);
+            System.out.println("Code ok...");
+            TimeUnit.SECONDS.sleep(2);
+            System.out.println("Moving to next fixing step : ");
+        }
+    }
+
 }
