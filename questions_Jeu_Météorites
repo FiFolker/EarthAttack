@@ -1,0 +1,45 @@
+
+Le code missile a besoin de plusieurs informations pour localiser la météorites. IL est doté de capteurs qui lui donnent les coordonnées en temps réel de la météorite. Quelle est le type de variable le plus adapté ?
+
+ExAlgo			Java
+entier			int
+réel			double
+caractère		char
+booléen			bool
+
+
+Bien joué ! Notre missile doit savoir quand tirer. Il est doté d'une variable "feu" qui passe a vrai quand il faut tiré. Le programme de lancement suivant est éronné. Corrigez le pour que le missile tire au bon moment
+
+if(feu) {
+	attendre();
+
+} else {
+	tirer();
+}
+
+
+Etant donner que la météorite est en mouvement. Les coordonnées reçu doivent s'actualiser 100 fois par secondes. Corrigez cette boucle pour qu'elle le fasse le bon nombre de fois.
+
+for (int i = 0; i <= 76; i++) {
+    Actualiser();
+}
+
+
+
+
+
+int[] nbJours = new int[12]; // Déclaration et initialisation d'un tableau de 12 entiers
+nbJours[0] = 31;
+nbJours[1] = 28; 
+nbJours[2] = 31; 
+//...
+nbJours[10] = 30; 
+nbJours[11] = 31; 
+// on boucle sur toutes les cases du tableau
+// interdiction d'écrire i < 12, il faut utiliser nbJours.length
+for (int i = 0; i < nbJours.length; i++) { 
+    faireQuelqueChose(nbJours[i]); 
+}
+
+
+
