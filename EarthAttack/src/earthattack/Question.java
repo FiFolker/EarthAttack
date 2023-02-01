@@ -18,7 +18,15 @@ public class Question {
         rep1;rep2;rep3;
         
         Format du fichier ordre.
-        numR1,numQ1;numR2,numQ2
+        numR1;numR2
+        Position obtenue selon l'ordre.
+    
+        question[0][0] : nom de la question en première position.
+            question représente la table après split du fichier question. 
+        reponse[0] : reponse en première position.
+            reponse représente la table après split du fichier réponse.
+        ordre[0] : Où se situe la réponse à la Question 1.
+            ordre représente la table après split du fichier ordre.
     
         Affichage de la question : 
     Restauration : Un Système Défaillant
@@ -31,26 +39,49 @@ public class Question {
      */
     public static void main(String[] args){
         Question q1 = new Question("nom1","desc1","rep1");
-        q1.afficherQuestion();
-        System.out.println(q1.reponse);
+        String str = "A) Reponse a; B) Reponse b; C) Reponse c; D) Reponse d;";
+        q1.afficherQuestion(str);
+        System.out.println(q1.answer);
     }
     
-    String nom;
+    String name;
     String description;
-    String reponse;
+    String answer;
+
     
-    Question(String nNom, String nDesc, String nRep){
-        this.nom = nNom;
-        this.description = nDesc;
-        this.reponse = nRep;
+    /***
+     * Constructeur par défaut de la classe Question.
+     */
+    Question(){
+        this.name = "";
+        this.description = "";
+        this.answer = "";
     }
     
-    void afficherQuestion(){
+    /***
+     * Constructeur à utiliser pour la classe Question.
+     * @param nName {@code String} représentant le nom attribuer à la {@code Question}.
+     * @param nDesc {@code String} représentant la description attribuer à la {@code Question}.
+     * @param nAwnser {@code String} représentant la réponse attribuer à la {@code Question}.
+     */
+    Question(String nName, String nDesc, String nAwnser){
+        this.name = nName;
+        this.description = nDesc;
+        this.answer = nAwnser;
+    }
+    
+    /***
+     * 
+     * @param allA {@code String} représentant l'ensemble des réponse de la {@code Question}.
+     */
+    void afficherQuestion(String allA){
         StringBuilder str = new StringBuilder();
         str.append("Restauration : ")
-           .append(this.nom)
+           .append(this.name)
            .append("\n\t")
-           .append(this.description);
+           .append(this.description)
+           .append("\n\t")
+           .append(allA);
         System.out.println(str.toString());
     }
 }
