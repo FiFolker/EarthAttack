@@ -15,13 +15,16 @@ import java.util.concurrent.TimeUnit;
 public class EarthAttack {
 
 	static final String[] FILES = {"question", "answer", "order"};
-	static int numberOfQuestion = 10;
+	static int numberOfQuestion = 2;
 	
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-       
+       Question[] questions = loadQuestions();
+	   String str = "A) Reponse a; B) Reponse b; C) Reponse c; D) Reponse d;";
+	   questions[0].afficherQuestion(str);
+	   
     }
     
     
@@ -42,9 +45,8 @@ public class EarthAttack {
         }
     }
 	
-	public static void loadQuestions() {
+	public static Question[] loadQuestions() {
 		Question[] questions = new Question[numberOfQuestion];
-		int actualQuestion = 0;
 
 		String temp = "";
 		String[][] nameAndDesc = new String[numberOfQuestion][2];
@@ -62,8 +64,8 @@ public class EarthAttack {
 					case 0:
 						for (int j = 0; j < split.length; j++) {
 							String[] tempSplit = split[j].split(",");
-							nameAndDesc[actualQuestion][0] = tempSplit[0];
-							nameAndDesc[actualQuestion][1] = tempSplit[1];
+							nameAndDesc[j][0] = tempSplit[0];
+							nameAndDesc[j][1] = tempSplit[1];
 						}
 						break;
 					case 1:
@@ -84,7 +86,7 @@ public class EarthAttack {
 		for(int i=0; i<numberOfQuestion; i++){
 			questions[i] = new Question(nameAndDesc[i][0], nameAndDesc[i][1], answer[Integer.parseInt(coords[i])]);
 		}
-
+		return questions;
 	}
 
     /**
