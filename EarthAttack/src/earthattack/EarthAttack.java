@@ -24,9 +24,11 @@ public class EarthAttack {
     public static void main(String[] args) {
         Question[] questions = loadQuestions();
         initialiseAnswers(answerSheets);
-        User usr = userSelect();
+//        User usr = userSelect();
         questions[0].afficherQuestion(answerSheets[0]);
-
+        double startTime = System.nanoTime() / 10e9;
+        Clock clock = new Clock((System.nanoTime() / 10e9), true);
+        clock.start();
     }
     
     /**
@@ -115,19 +117,17 @@ public class EarthAttack {
      * vrai sinon.
      * @return le temps écoulé en secondes.
      */
-    static double clock(boolean run) {
+    static double clock(boolean run, double startTime) {
         double time = 0;
-        double startTime = System.nanoTime() / 10e9;
         double currentTime;
         while (time <= 1200 & run) {
-            currentTime = System.nanoTime();
+            currentTime = System.nanoTime() / 10e9;
             time = currentTime - startTime;
         }
         return time;
     }
     
-    static User userSelect() {
-        
-    }
+//    static User userSelect() {
+//    }
 
 }

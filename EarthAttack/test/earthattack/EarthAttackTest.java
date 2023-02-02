@@ -20,16 +20,17 @@ public class EarthAttackTest {
     @Test
     public void clockTest() {
         DecimalFormat df = new DecimalFormat("#.###");
-        double t = EarthAttack.clock(true);
+        double startTime = System.nanoTime() / 10e9;
+        double t = EarthAttack.clock(true, startTime);
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException ex) {
             Logger.getLogger(EarthAttackTest.class.getName()).log(Level.SEVERE, null, ex);
         }
-        t = EarthAttack.clock(false);
+        t = EarthAttack.clock(false, startTime);
         System.out.println(t);
         System.out.println(df.format(t));
-        assertTrue(EarthAttack.clock(true) >= 2);
+        assertTrue(EarthAttack.clock(true, startTime) >= 2);
     }
 
     @Test
