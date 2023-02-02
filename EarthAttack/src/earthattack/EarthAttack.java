@@ -56,7 +56,7 @@ public class EarthAttack {
         String temp = "";
         String[][] nameAndDesc = new String[numberOfQuestion][2];
         String[] answer = new String[numberOfQuestion];
-        String[] coords = new String[numberOfQuestion];
+        String[] order = new String[numberOfQuestion];
 
         for (int i = 0; i < FILES.length; i++) {
             try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
@@ -76,7 +76,7 @@ public class EarthAttack {
                         answer = split;
                         break;
                     case 2:
-                        coords = split;
+                        order = split;
                         break;
                 }
 
@@ -87,7 +87,7 @@ public class EarthAttack {
         }
 
         for (int i = 0; i < numberOfQuestion; i++) {
-            questions[i] = new Question(nameAndDesc[i][0], nameAndDesc[i][1], answer[Integer.parseInt(coords[i])]);
+            questions[i] = new Question(nameAndDesc[i][0], nameAndDesc[i][1], answer[Integer.parseInt(order[i])]);
         }
         return questions;
     }
