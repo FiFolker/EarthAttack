@@ -24,6 +24,7 @@ public class EarthAttack {
     public static void main(String[] args) {
         Question[] questions = loadQuestions();
         initialiseAnswers(answerSheets);
+        User usr = userSelect();
         questions[0].afficherQuestion(answerSheets[0]);
 
     }
@@ -106,6 +107,7 @@ public class EarthAttack {
         tab[9] = "";
     }
 
+    
     /**
      * Calcule le temps qui s'écoule.
      *
@@ -122,6 +124,10 @@ public class EarthAttack {
             time = currentTime - startTime;
         }
         return time;
+    }
+    
+    static User userSelect() {
+        
     }
 
 }
