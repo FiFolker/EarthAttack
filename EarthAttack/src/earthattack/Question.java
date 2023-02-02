@@ -10,12 +10,15 @@ public class Question {
         Format du fichier question.
         nom1,description1;nom2,description2;
     
-        Format du fichier réponse.
+        Format du fichier answer.
         rep1;rep2;rep3;
         
-        Format du fichier ordre.
+        Format du fichier order.
         numR1;numR2
         Position obtenue selon l'ordre.
+    
+        Format du fichier leaderboard.
+        userName1,score1;userName2,score2
     
         question[0][0] : nom de la question en première position.
             question représente la table après split du fichier question. 
