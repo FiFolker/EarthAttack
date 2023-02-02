@@ -14,7 +14,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class EarthAttack {
 
-    static final String[] FILES = {"question", "answer", "order"};
+    static final String[] FILES = {"question", "answer", "order", "leaderboard"};
     static int numberOfQuestion = 2;
     static final String[] answerSheets = new String[10];
 
@@ -24,13 +24,13 @@ public class EarthAttack {
     public static void main(String[] args) {
         Question[] questions = loadQuestions();
         initialiseAnswers(answerSheets);
-//        User usr = userSelect();
+        User usr = User.userSelect();
         questions[0].afficherQuestion(answerSheets[0]);
         double startTime = System.nanoTime() / 10e9;
         Clock clock = new Clock((System.nanoTime() / 10e9), true);
         clock.start();
     }
-    
+
     /**
      * Simule un chargement avant la prochaine question si la précèdent était
      * juste.
@@ -91,12 +91,13 @@ public class EarthAttack {
         }
         return questions;
     }
-    
-    /***
-     * 
+
+    /**
+     * *
+     *
      * @param tab tableau contenants l'entiérté des réponses
      */
-    static void initialiseAnswers(String[] tab){
+    static void initialiseAnswers(String[] tab) {
         tab[0] = "";
         tab[1] = "";
         tab[2] = "";
@@ -109,7 +110,6 @@ public class EarthAttack {
         tab[9] = "";
     }
 
-    
     /**
      * Calcule le temps qui s'écoule.
      *
@@ -126,8 +126,5 @@ public class EarthAttack {
         }
         return time;
     }
-    
-//    static User userSelect() {
-//    }
 
 }
