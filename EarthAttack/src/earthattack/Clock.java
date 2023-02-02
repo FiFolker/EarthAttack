@@ -34,16 +34,15 @@ public class Clock extends Thread {
         this.run = run;
     }
 
-    public void getClocked() {
+    void getClocked() {
         double sT = this.startTime;
         this.time = 0;
         double currentTime;
-        if (run) {
-            while (time <= 1200) {
-                currentTime = System.nanoTime() / 10e9;
-                time = currentTime - sT;
-            }
+        while (time <= 1200 & run) {
+            currentTime = System.nanoTime() / 10e9;
+            time = currentTime - sT;
         }
+
     }
 
 }

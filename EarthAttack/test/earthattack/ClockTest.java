@@ -31,7 +31,7 @@ public class ClockTest {
         }
         clock.start();
         clock.run = false;
-        assertEquals(2, clock.time, 0.1);
+        assertEquals(clock.time, 2.0, 0.1);
     }
 
 }
