@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
  */
 public class EarthAttack {
 
-    static final String[] FILES = {"question", "answer", "order", "leaderboard"};
+    static final String[] FILES = {"ressources/data/question", "ressources/data/answer", "ressources/data/order", "ressources/data/leaderboard"};
     static int numberOfQuestion = 2;
     static final String[] answerSheets = new String[10];
 
