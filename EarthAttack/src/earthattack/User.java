@@ -2,10 +2,10 @@ package earthattack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -35,6 +35,7 @@ public class User {
 	public static void main(String[] args) {
 		User.initialiseUsers();
 		System.out.println(User.users.toString());
+		flushUsers();
 	}
 
 	static void initialiseUsers() {
@@ -43,12 +44,12 @@ public class User {
 				String line = file.next();
 				String[] userScoreTogether = line.split(";");
 				System.out.println(userScoreTogether.length);
-				for (int i = 0; i < userScoreTogether.length - 1; i++) {
+				for (int i = 0; i < userScoreTogether.length; i++) {
 					String[][] userInfo = new String[userScoreTogether.length][2];
-					for (int j = 0; j < 2; i++) {
+					for (int j = 0; j < 2; j++) {
 						userInfo[i][j] = userScoreTogether[i].split(",")[j];
 					}
-					User user = new User(userInfo[i][0], Integer.parseInt(userInfo[i][1]));
+					User user = new User(userInfo[i][0], Double.parseDouble(userInfo[i][1]));
 					users.add(user);
 				}
 			}
@@ -64,17 +65,29 @@ public class User {
 
 	static void flushUsers() {
 		try (PrintWriter fileLeaderboard = new PrintWriter(new File(EarthAttack.FILES[3]));) {
-
-			for (User u : users) {
+			ArrayList<User> sortedUser = sortUsers();
+			for (User u : sortedUser) {
 				fileLeaderboard.print(u.name + "," + u.score + ";");
 			}
 
-		} catch (FileNotFoundException ex) {
-			System.out.println("Ouverture du fichier impossible : " + ex);
-		} catch (IOException ex) {
-			System.out.println("Erreur d'écriture : " + ex);
+		} catch (Exception ex) {
+			System.out.println("Error in flushUsers() "+ ex);
 		}
-
+	}
+	
+	static ArrayList<User> sortUsers(){
+		ArrayList<User> sortedUserList = new ArrayList<User>(users);
+		sortedUserList.sort(new Comparator<User>(){
+			@Override
+			public int compare(User u1, User u2){
+				if(u1.score > u2.score){
+					return -1;
+				}else{
+					return 1;
+				}
+			}
+		});
+		return sortedUserList;
 	}
 
 	static User userSelect() {
