@@ -3,7 +3,6 @@ package earthattack;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -56,11 +55,12 @@ public class User {
         return userNotFound;
     }
 
-    static void flushUsers(User user) {
-        try (FileWriter fileWriter = new FileWriter("test.txt", true);
-			PrintWriter fileScore = new PrintWriter(fileWriter);){
+    static void flushUsers() {
+        try (PrintWriter fileLeaderboard = new PrintWriter(new File(EarthAttack.FILES[3]));){
 			
-			fileScore.println(user.name+";"+user.score);
+			for(User u : users){
+				fileLeaderboard.print(u.name +","+ u.score + ";");
+			}
 			
 		} catch (FileNotFoundException ex) {
 			System.out.println("Ouverture du fichier impossible : " + ex);
