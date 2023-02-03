@@ -9,6 +9,7 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,7 +22,7 @@ public class User {
 
     double score;
     String name;
-    static ArrayList<User> users = new ArrayList<>();
+    static HashSet<User> users = new HashSet<>();
 
     User() {
         this.name = "";
@@ -34,42 +35,47 @@ public class User {
         this.score = nScore;
     }
 
-    static void initialiseUsers(){
-        try(Scanner file = new Scanner(new File(EarthAttack.FILES[3]))){
-           while(file.hasNextLine()){
-               String line = file.next();
-               line.split(";");
-               
-               User user = null;
-               users.add(user);
-           } 
+    public static void main(String[] args) {
+        User.initialiseUsers();
+        System.out.println(User.users.toString());
+    }
+
+    static void initialiseUsers() {
+        try (Scanner file = new Scanner(new File(EarthAttack.FILES[3]))) {
+            while (file.hasNextLine()) {
+                String line = file.next();
+                String[] userScoreTogether = line.split(";");
+                System.out.println(userScoreTogether.length);
+                for (int i = 0; i < userScoreTogether.length - 1; i++) {
+                    String[][] userInfo = new String[userScoreTogether.length][2];
+                    for (int j = 0; j < 2; i++) {
+                        userInfo[i][j] = userScoreTogether[i].split(",")[j];
+                    }
+                    User user = new User(userInfo[i][0], Integer.parseInt(userInfo[i][1]));
+                    users.add(user);
+                }
+            }
         } catch (FileNotFoundException ex) {
             Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
-    static boolean validUser(String name) {
-        boolean userNotFound = true;
-        int i = 0;
-        while (userNotFound & i < users.size()) {
-            User cUser = users.get(i);
-            userNotFound = (cUser.name != name) & (!cUser.name.isEmpty());
-        }
 
-        return userNotFound;
+    static boolean validUser(String name) {
+        // Could apply different rules to format names but it isn't needed YET
+        return users.contains(name) & !name.isEmpty();
     }
 
     static void flushUsers() {
-        
+
     }
-    
+
     static User userSelect() {
         Scanner sc = new Scanner(System.in);
         String name = "";
-        do{
+        do {
             System.out.println("Saisisez un pseudonyme.");
             name = sc.next();
-        } while (!User.validUser(name));
+        } while (User.validUser(name));
 
         return new User(name, 0);
     }
