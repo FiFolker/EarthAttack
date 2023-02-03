@@ -1,12 +1,9 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package earthattack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.FileReader;
+import java.io.PrintWriter;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -59,8 +56,18 @@ public class User {
         return userNotFound;
     }
 
-    static void flushUsers() {
-        
+    static void flushUsers(User user) {
+        try (FileWriter fileWriter = new FileWriter("test.txt", true);
+			PrintWriter fileScore = new PrintWriter(fileWriter);){
+			
+			fileScore.println(user.name+";"+user.score);
+			
+		} catch (FileNotFoundException ex) {
+			System.out.println("Ouverture du fichier impossible : " + ex);
+		} catch (IOException ex) {
+			System.out.println("Erreur d'écriture : " + ex);
+		}
+
     }
     
     static User userSelect() {
