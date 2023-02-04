@@ -14,48 +14,50 @@ public class EarthAttack {
     static int numberOfQuestion = 2;
     static final String[] answerSheets = new String[10];
 	static Scanner input = new Scanner(System.in);
-	static final String[] questionSheets = {"A) c'est pas elle ; B) try 2; C) c'est elle ; D) try 4", "A) c'est elle ; B) try 22; C) try 23; D) c'est pas elle"};
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Question[] questionLoaded = loadQuestions();
+        
         initialiseAnswers(answerSheets);
         //User usr = User.userSelect();
         //double startTime = System.nanoTime() / 10e9;
 		User.initialiseUsers();
-        Clock clock = new Clock((System.nanoTime() / 10e9), true);
-		clock.start();
+		menu();
+    }
+	
+	public static void menu(){
+		Question[] questionLoaded = loadQuestions();
 		int choice = 0;
-		do{
+		do {
 			UI.showMenu();
 			choice = input.nextInt();
-			switch(choice){
+			switch (choice) {
 				case 1:
 					play(questionLoaded);
 					break;
 				case 2:
 					UI.showLeaderboard(10);
 					break;
-				case 3:	
+				case 3:
 					System.out.println("Au revoir ...");
 					break;
 				default:
 					System.out.println("Vous devez choisir un nombre entre 1 et 3 !");
 			}
-		}while(choice != 3); // clock.time > 0 && 
-        
-		
-    }
+		} while (choice != 3); 
+	}
 	
 	static void play(Question[] questions){
+		Clock clock = new Clock((System.nanoTime() / 10e9), true);
+		clock.start();
 		int i = 0;
 		String reply = "";
 		boolean correctAnswer = false;
 		do{
 			UI.showEarth();
-			questions[i].showQuestion(questionSheets[i]);
+			questions[i].showQuestion(answerSheets[i]);
 			reply = input.next();
 			correctAnswer = reply.toLowerCase().equals(questions[i].answer);
 			if(correctAnswer){
@@ -73,6 +75,7 @@ public class EarthAttack {
 			}
 		}while(i<questions.length); //clock.time > 0 && 
 		UI.showBadEnd();
+		UI.showGoodEnd();
 	}
 
     /**
@@ -146,8 +149,8 @@ public class EarthAttack {
      * @param tab tableau contenants l'entiérté des réponses
      */
     static void initialiseAnswers(String[] tab) {
-        tab[0] = "";
-        tab[1] = "";
+        tab[0] = "A) c'est pas elle ; B) try 2; C) c'est elle ; D) try 4";
+        tab[1] = "A) c'est elle ; B) try 22; C) try 23; D) c'est pas elle";
         tab[2] = "";
         tab[3] = "";
         tab[4] = "";
