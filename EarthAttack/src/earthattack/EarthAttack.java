@@ -13,6 +13,7 @@ public class EarthAttack {
     static final String[] FILES = {"ressources/data/question", "ressources/data/answer", "ressources/data/order", "ressources/data/leaderboard"};
     static int numberOfQuestion = 2;
     static final String[] answerSheets = new String[10];
+	static Scanner input = new Scanner(System.in);
 
     /**
      * @param args the command line arguments
@@ -20,11 +21,31 @@ public class EarthAttack {
     public static void main(String[] args) {
         Question[] questions = loadQuestions();
         initialiseAnswers(answerSheets);
-        User usr = User.userSelect();
-        questions[0].afficherQuestion(answerSheets[0]);
-        double startTime = System.nanoTime() / 10e9;
+        //User usr = User.userSelect();
+        //double startTime = System.nanoTime() / 10e9;
+		User.initialiseUsers();
         Clock clock = new Clock((System.nanoTime() / 10e9), true);
-        clock.start();
+		clock.start();
+		int choice = 0;
+		do{
+			UI.showMenu();
+			choice = input.nextInt();
+			switch(choice){
+				case 1:
+					System.out.println("WIP");
+					break;
+				case 2:
+					UI.showLeaderboard(10);
+					break;
+				case 3:	
+					System.out.println("Au revoir ...");
+					break;
+				default:
+					System.out.println("Vous devez choisir un nombre entre 1 et 3 !");
+			}
+		}while(choice != 3); // clock.time > 0 && 
+        
+		
     }
 
     /**
@@ -46,6 +67,10 @@ public class EarthAttack {
         }
     }
 
+	/**
+	 * Charge les questions dans un tableau d'instance de Question
+	 * @return l'array de Question
+	 */
     public static Question[] loadQuestions() {
         Question[] questions = new Question[numberOfQuestion];
 

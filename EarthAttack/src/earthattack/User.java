@@ -58,11 +58,19 @@ public class User {
 		}
 	}
 
+	/**
+	 * Vérifie si le nom est déjà utilisé
+	 * @param name nom a vérifié
+	 * @return vrai ou faux si le nom existe déjà
+	 */
 	static boolean validUser(String name) {
 		// Could apply different rules to format names but it isn't needed YET
 		return users.contains(name) & !name.isEmpty();
 	}
 
+	/**
+	 * Met les utilisateurs trié dans l'ordre dans un fichier ex : name,score;name2,score2;
+	 */
 	static void flushUsers() {
 		try (PrintWriter fileLeaderboard = new PrintWriter(new File(EarthAttack.FILES[3]));) {
 			ArrayList<User> sortedUser = sortUsers();
@@ -75,6 +83,10 @@ public class User {
 		}
 	}
 	
+	/**
+	 * Tri les utilisateurs dans l'ordre décroissant
+	 * @return l'arrayList trié
+	 */
 	static ArrayList<User> sortUsers(){
 		ArrayList<User> sortedUserList = new ArrayList<User>(users);
 		sortedUserList.sort(new Comparator<User>(){
@@ -90,6 +102,10 @@ public class User {
 		return sortedUserList;
 	}
 
+	/**
+	 * Permet d'instancier un user en lui demandand son pseudo
+	 * @return l'instance créée
+	 */
 	static User userSelect() {
 		Scanner sc = new Scanner(System.in);
 		String name = "";
