@@ -14,12 +14,13 @@ public class EarthAttack {
     static int numberOfQuestion = 2;
     static final String[] answerSheets = new String[10];
 	static Scanner input = new Scanner(System.in);
+	static final String[] questionSheets = {"A) c'est pas elle ; B) try 2; C) c'est elle ; D) try 4", "A) c'est elle ; B) try 22; C) try 23; D) c'est pas elle"};
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Question[] questions = loadQuestions();
+        Question[] questionLoaded = loadQuestions();
         initialiseAnswers(answerSheets);
         //User usr = User.userSelect();
         //double startTime = System.nanoTime() / 10e9;
@@ -32,7 +33,7 @@ public class EarthAttack {
 			choice = input.nextInt();
 			switch(choice){
 				case 1:
-					System.out.println("WIP");
+					play(questionLoaded);
 					break;
 				case 2:
 					UI.showLeaderboard(10);
@@ -47,6 +48,32 @@ public class EarthAttack {
         
 		
     }
+	
+	static void play(Question[] questions){
+		int i = 0;
+		String reply = "";
+		boolean correctAnswer = false;
+		do{
+			UI.showEarth();
+			questions[i].showQuestion(questionSheets[i]);
+			reply = input.next();
+			correctAnswer = reply.toLowerCase().equals(questions[i].answer);
+			if(correctAnswer){
+				System.out.println("Bonne réponse !");
+				try{
+					loadingNextAnswer(correctAnswer);
+				}catch(Exception ex){
+					System.out.println("le loading next answer a fait n'imp " + ex);
+					ex.printStackTrace();
+				}
+				i++;
+			}else{
+				System.out.println("Perdu ... vous avez perdu <time> min/sec !");
+				System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+			}
+		}while(i<questions.length); //clock.time > 0 && 
+		UI.showBadEnd();
+	}
 
     /**
      * Simule un chargement avant la prochaine question si la précèdent était
@@ -58,11 +85,11 @@ public class EarthAttack {
     static void loadingNextAnswer(boolean result) throws InterruptedException {
         if (result) {
             System.out.println("Sending new code...");
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(1);
             System.out.println("Loading code...");
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(1);
             System.out.println("Code ok...");
-            TimeUnit.SECONDS.sleep(2);
+            TimeUnit.SECONDS.sleep(1);
             System.out.println("Moving to next fixing step : ");
         }
     }
