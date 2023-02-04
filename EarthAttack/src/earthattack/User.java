@@ -17,109 +17,156 @@ import java.util.logging.Logger;
  */
 public class User {
 
-	double score;
-	String name;
-	static HashSet<User> users = new HashSet<>();
+    double score;
+    String name;
+    static HashSet<User> users = new HashSet<>();
 
-	User() {
-		this.name = "";
-		this.score = 0.;
-		users.add(this);
-	}
+    /**
+     * The Default Class Constructor Instantiates a {@code User} with
+     * {@code this.name = ""} and {@code this.score = 0.} It then adds them to
+     * {@code User.users}.
+     */
+    User() {
+        this.name = "";
+        this.score = 0.;
+        users.add(this);
+    }
 
-	User(String nName, double nScore) {
-		this.name = nName;
-		this.score = nScore;
-	}
+    /**
+     * The Intended Class Constructor Instantiates a {@code User} with
+     * {@code this.name = nName} and {@code this.score = nScore} It checks if
+     * the name is valid if it isn't the name will default to "". It then adds
+     * them to {@code User.users}.
+     *
+     * @param nName {@code String} that represents the name of the {@code User}.
+     * @param nScore {@code Double} that represents the score of the
+     * {@code User}.
+     */
+    User(String nName, double nScore) {
+        if (User.validUser(nName)) {
+            this.name = nName;
+        } else {
+            this.name = "";
+        }
+        this.score = nScore;
+        users.add(this);
+    }
 
-	public static void main(String[] args) {
-		User.initialiseUsers();
-		System.out.println(User.users.toString());
-		flushUsers();
-	}
+    public static void main(String[] args) {
+        User.initialiseUsers();
+        User.userList();
+        User.flushUsers();
+    }
 
-	static void initialiseUsers() {
-		try (Scanner file = new Scanner(new File(EarthAttack.FILES[3]))) {
-			while (file.hasNextLine()) {
-				String line = file.next();
-				String[] userScoreTogether = line.split(";");
-				System.out.println(userScoreTogether.length);
-				for (int i = 0; i < userScoreTogether.length; i++) {
-					String[][] userInfo = new String[userScoreTogether.length][2];
-					for (int j = 0; j < 2; j++) {
-						userInfo[i][j] = userScoreTogether[i].split(",")[j];
-					}
-					User user = new User(userInfo[i][0], Double.parseDouble(userInfo[i][1]));
-					users.add(user);
-				}
-			}
-		} catch (FileNotFoundException ex) {
-			Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
-		}
-	}
+    /**
+     * Prints out a list of all the {@code User} in {@code User.users}.
+     */
+    public static void userList() {
+        for (User u : User.users) {
+            System.out.print("" + u.name + "," + u.score + ";\n");
+        }
+    }
 
-	/**
-	 * Vérifie si le nom est déjà utilisé
-	 * @param name nom a vérifié
-	 * @return vrai ou faux si le nom existe déjà
-	 */
-	static boolean validUser(String name) {
-		// Could apply different rules to format names but it isn't needed YET
-		return users.contains(name) & !name.isEmpty();
-	}
+    /**
+     * Reads out the info of all the users contained in the leader board
+     * instantiates them to a {@code User} and adds them to {@code User.users}.
+     */
+    static void initialiseUsers() {
+        try ( Scanner file = new Scanner(new File(EarthAttack.FILES[3]))) {
+            while (file.hasNextLine()) {
+                String line = file.next();
+                String[] userScoreTogether = line.split(";");
+                for (int i = 0; i < userScoreTogether.length; i++) {
+                    String[][] userInfo = new String[userScoreTogether.length][2];
+                    for (int j = 0; j < 2; j++) {
+                        userInfo[i][j] = userScoreTogether[i].split(",")[j];
+                    }
+                    User user = new User(userInfo[i][0], Double.parseDouble(userInfo[i][1]));
+                    users.add(user);
+                }
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(User.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
 
-	/**
-	 * Met les utilisateurs trié dans l'ordre dans un fichier ex : name,score;name2,score2;
-	 */
-	static void flushUsers() {
-		try (PrintWriter fileLeaderboard = new PrintWriter(new File(EarthAttack.FILES[3]));) {
-			ArrayList<User> sortedUser = sortUsers();
-			for (User u : sortedUser) {
-				fileLeaderboard.print(u.name + "," + u.score + ";");
-			}
+    /**
+     * Checks if the name is valid or not
+     *
+     * @param name {@code String} to check
+     * @return {@code boolean} that represents the state of validity
+     */
+    static boolean validUser(String name) {
+        // Applied checks to make sure the name is printable
+        boolean bool = true;
+        boolean done = false;
+        while (bool & !done) {
+            for (User u : users) {
+                //Checks if the username isn't already used by another User.
+                bool = u.name != name & !name.isEmpty();
+            }
+            char[] cars = name.toCharArray();
+            for (char c : cars) {
+                // Checks if c is in the AlphaNumerical format.
+                bool = (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9');
+            }
+            done = true;
+        }
 
-		} catch (Exception ex) {
-			System.out.println("Error in flushUsers() "+ ex);
-		}
-	}
-	
-	/**
-	 * Tri les utilisateurs dans l'ordre décroissant
-	 * @return l'arrayList trié
-	 */
-	static ArrayList<User> sortUsers(){
-		ArrayList<User> sortedUserList = new ArrayList<User>(users);
-		sortedUserList.sort(new Comparator<User>(){
-			@Override
-			public int compare(User u1, User u2){
-				if(u1.score > u2.score){
-					return -1;
-				}else{
-					return 1;
-				}
-			}
-		});
-		return sortedUserList;
-	}
+        return bool;
+    }
 
-	/**
-	 * Permet d'instancier un user en lui demandand son pseudo
-	 * @return l'instance créée
-	 */
-	static User userSelect() {
-		Scanner sc = new Scanner(System.in);
-		String name = "";
-		do {
-			System.out.println("Saisisez un pseudonyme.");
-			name = sc.next();
-		} while (User.validUser(name));
+    /**
+     * Flushes out all the current {@code User} contained in {@code User.users}
+     * to a file with the following format : name,score;name2,score2;
+     */
+    static void flushUsers() {
+        try ( PrintWriter fileLeaderboard = new PrintWriter(new File(EarthAttack.FILES[3]));) {
+            ArrayList<User> sortedUser = sortUsers();
+            for (User u : sortedUser) {
+                fileLeaderboard.print(u.name + "," + u.score + ";");
+            }
 
-		return new User(name, 0);
-	}
+        } catch (Exception ex) {
+            System.out.println("Error in flushUsers() " + ex);
+        }
+    }
+
+    /**
+     * Sorts all the {@code User} in {@code User.users} in descending order
+     *
+     * @return {@code ArrayList<User>} with the sorted {@code User} by score
+     */
+    static ArrayList<User> sortUsers() {
+        ArrayList<User> sortedUserList = new ArrayList<User>(users);
+        sortedUserList.sort(new Comparator<User>() {
+            @Override
+            public int compare(User u1, User u2) {
+                if (u1.score > u2.score) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            }
+        });
+        return sortedUserList;
+    }
+
+    /**
+     * Permits the instantiation of a {@code User} with a valid
+     * {@code this.name}
+     *
+     * @return {@code User} with a valid name.
+     */
+    static User userSelect() {
+        Scanner sc = new Scanner(System.in);
+        String name = "";
+        do {
+            System.out.println("Saisisez un pseudonyme.");
+            name = sc.next();
+        } while (User.validUser(name));
+
+        return new User(name, 0);
+    }
 
 }
-
-
-	
-	
-
