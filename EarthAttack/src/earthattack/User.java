@@ -100,17 +100,22 @@ public class User {
         // Applied checks to make sure the name is printable
         boolean bool = true;
         boolean done = false;
-        while (bool & !done) {
-            for (User u : users) {
-                //Checks if the username isn't already used by another User.
-                bool = u.name != name & !name.isEmpty();
+        // Checks if the names length is inferior or equal to 8.
+        if (name.toCharArray().length <= 8) {
+            while (bool & !done) {
+                for (User u : users) {
+                    //Checks if the username isn't already used by another User.
+                    bool = u.name != name & !name.isEmpty();
+                }
+                char[] cars = name.toCharArray();
+                for (char c : cars) {
+                    // Checks if c is in the AlphaNumerical format.
+                    bool = (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9');
+                }
+                done = true;
             }
-            char[] cars = name.toCharArray();
-            for (char c : cars) {
-                // Checks if c is in the AlphaNumerical format.
-                bool = (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9');
-            }
-            done = true;
+        }else{
+            bool = false;
         }
 
         return bool;
