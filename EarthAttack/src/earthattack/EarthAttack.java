@@ -26,27 +26,31 @@ public class EarthAttack {
 
         var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
         Duration elapsedTime;
+        // Loads all the answers in the answer sheet.
+        initialiseAnswers(answerSheets);
+        // Loads all the users from the leaderboard.
+        User.initialiseUsers();
+        // Asks the user to choose their username.
+        User usr = User.userSelect();
+        
         boolean run = true;
-
+        boolean end = false;
         do {
             elapsedTime = Duration.between(startTime, Instant.now());
             // QCM
-            menu();
+            end = menu();
 
-        } while (run && elapsedTime.compareTo(MAX_DURATION) < 0); // Le inférieur à 0 c'est comment compareTo fonctionne
-
-        initialiseAnswers(answerSheets);
-        User.initialiseUsers();
-        User usr = User.userSelect();
-
+        } while (run && elapsedTime.compareTo(MAX_DURATION) < 0 && !end); // Le inférieur à 0 c'est comment compareTo fonctionne
+        
     }
 
     /**
      * Affiche le menu et gère les choix renvoyés
      */
-    public static void menu() {
+    public static boolean menu() {
         Question[] questionLoaded = loadQuestions();
         int choice = 0;
+        boolean gameEnd = false;
         do {
             UI.showMenu();
             choice = input.nextInt();
@@ -59,11 +63,15 @@ public class EarthAttack {
                     break;
                 case 3:
                     System.out.println("Au revoir ...");
+                    gameEnd = true;
                     break;
                 default:
                     System.out.println("Vous devez choisir un nombre entre 1 et 3 !");
+                    break;
             }
         } while (choice != 3);
+        
+        return gameEnd;
     }
 
     /**

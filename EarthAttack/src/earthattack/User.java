@@ -78,7 +78,7 @@ public class User {
     static void initialiseUsers() {
         try ( Scanner file = new Scanner(new File(EarthAttack.FILES[3]))) {
             while (file.hasNextLine()) {
-                String line = file.next();
+                String line = file.nextLine();
                 String[] userScoreTogether = line.split(";");
                 for (int i = 0; i < userScoreTogether.length; i++) {
                     String[][] userInfo = new String[userScoreTogether.length][2];
