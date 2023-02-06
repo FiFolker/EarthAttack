@@ -105,7 +105,7 @@ public class User {
         boolean bool = true;
         boolean done = false;
         // Checks if the names length is inferior or equal to 8.
-        if (name.toCharArray().length >= 8) {
+        if (name.toCharArray().length <= 8) {
             while (bool && !done) {
                 for (User u : users) {
                     //Checks if the username isn't already used by another User.
@@ -174,7 +174,7 @@ public class User {
         do {
             System.out.println("Saisisez un pseudonyme.");
             name = sc.next();
-        } while (User.validUser(name));
+        } while (!User.validUser(name));
 
         return new User(name, 0);
     }
