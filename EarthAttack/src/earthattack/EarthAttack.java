@@ -23,34 +23,23 @@ public class EarthAttack {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-
-        var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
-        Duration elapsedTime;
+        
         // Loads all the answers in the answer sheet.
         initialiseAnswers(answerSheets);
         // Loads all the users from the leaderboard.
         User.initialiseUsers();
         // Asks the user to choose their username.
         User usr = User.userSelect();
-        
-        boolean run = true;
-        boolean end = false;
-        do {
-            elapsedTime = Duration.between(startTime, Instant.now());
-            // QCM
-            end = menu();
-
-        } while (run && elapsedTime.compareTo(MAX_DURATION) < 0 && !end); // Le inférieur à 0 c'est comment compareTo fonctionne
+        menu();
         
     }
 
     /**
      * Affiche le menu et gère les choix renvoyés
      */
-    public static boolean menu() {
+    public static void menu() {
         Question[] questionLoaded = loadQuestions();
         int choice = 0;
-        boolean gameEnd = false;
         do {
             UI.showMenu();
             choice = input.nextInt();
@@ -63,7 +52,6 @@ public class EarthAttack {
                     break;
                 case 3:
                     System.out.println("Au revoir ...");
-                    gameEnd = true;
                     break;
                 default:
                     System.out.println("Vous devez choisir un nombre entre 1 et 3 !");
@@ -71,7 +59,6 @@ public class EarthAttack {
             }
         } while (choice != 3);
         
-        return gameEnd;
     }
 
     /**
@@ -81,8 +68,7 @@ public class EarthAttack {
      * @param questions Questions loaded
      */
     static void play(Question[] questions) {
-
-        var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
+        var startTime = Instant.now();
         Duration elapsedTime;
         boolean run = true;
         int i = 0;
