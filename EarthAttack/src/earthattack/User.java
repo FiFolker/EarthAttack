@@ -105,8 +105,8 @@ public class User {
         boolean bool = true;
         boolean done = false;
         // Checks if the names length is inferior or equal to 8.
-        if (name.toCharArray().length <= 8) {
-            while (bool & !done) {
+        if (name.toCharArray().length >= 8) {
+            while (bool && !done) {
                 for (User u : users) {
                     //Checks if the username isn't already used by another User.
                     bool = u.name != name & !name.isEmpty();
@@ -119,6 +119,7 @@ public class User {
                 done = true;
             }
         }else{
+			System.out.println("Vous devez rentrer une pseudo étant égal à 8 caractères maximum !");
             bool = false;
         }
 

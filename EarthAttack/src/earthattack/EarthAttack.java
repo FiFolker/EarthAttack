@@ -22,26 +22,15 @@ public class EarthAttack {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception{
-
-        var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
-        Duration elapsedTime;
-        boolean run = true;
-
-        do {
-            elapsedTime = Duration.between(startTime, Instant.now());
-            // QCM
-
-        } while (run && elapsedTime.compareTo(MAX_DURATION) < 0); // Le inférieur à 0 c'est comment compareTo fonctionne
-
         initialiseAnswers(answerSheets);
-        //User usr = User.userSelect();
-        //double startTime = System.nanoTime() / 10e9;
         User.initialiseUsers();
+		User usr = User.userSelect();
+		
         menu();
     }
 
     /**
-     * Fonction qui gère le menu.
+     * Affiche le menu et gère les choix renvoyés
      */
     public static void menu() {
         Question[] questionLoaded = loadQuestions();
@@ -66,14 +55,19 @@ public class EarthAttack {
     }
     
     /**
-     * ELOUAN TRAVAILLE
-     * @param questions 
+     * Lance le QUIZZ en affichant les questions, prenant une réponse et donnant le résultat.
+     * @param questions Questions loaded
      */
-    static void play(Question[] questions) {
+    static void play(Question[] questions){
+		
+		var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
+		Duration elapsedTime;
+		boolean run = true;
         int i = 0;
         String reply = "";
         boolean correctAnswer = false;
         do {
+			elapsedTime = Duration.between(startTime, Instant.now());
             UI.showEarth();
             questions[i].showQuestion(answerSheets[i]);
             reply = input.next();
@@ -91,9 +85,21 @@ public class EarthAttack {
                 System.out.println("Perdu ... vous avez perdu <time> min/sec !");
                 System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
             }
-        } while (i < questions.length); //clock.time > 0 && 
-        UI.showBadEnd();
-        UI.showGoodEnd();
+        } while (i < questions.length && run && elapsedTime.compareTo(MAX_DURATION) < 0); 
+		if(elapsedTime.compareTo(MAX_DURATION) < 0){
+			System.out.println("Good End");
+			UI.showGoodEnd();	
+		}else{
+			System.out.println("Bad End");
+			UI.showBadEnd();
+		}
+        
+		try{
+			TimeUnit.SECONDS.sleep(2);
+		}catch(Exception ex){
+			System.out.println("Exception sleep dans play : " + ex);
+		}
+		
     }
 
     /**
