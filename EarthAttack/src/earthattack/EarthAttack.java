@@ -21,7 +21,7 @@ public class EarthAttack {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception{
 
         var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
         Duration elapsedTime;
@@ -40,6 +40,9 @@ public class EarthAttack {
         menu();
     }
 
+    /**
+     * Fonction qui gère le menu.
+     */
     public static void menu() {
         Question[] questionLoaded = loadQuestions();
         int choice = 0;
@@ -61,10 +64,12 @@ public class EarthAttack {
             }
         } while (choice != 3);
     }
-
+    
+    /**
+     * ELOUAN TRAVAILLE
+     * @param questions 
+     */
     static void play(Question[] questions) {
-        Clock clock = new Clock((System.nanoTime() / 10e9), true);
-        clock.start();
         int i = 0;
         String reply = "";
         boolean correctAnswer = false;

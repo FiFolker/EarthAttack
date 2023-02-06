@@ -52,6 +52,10 @@ public class User {
         users.add(this);
     }
 
+    /**
+     * Main pour test
+     * @param args 
+     */
     public static void main(String[] args) {
         User.initialiseUsers();
         User.userList();
