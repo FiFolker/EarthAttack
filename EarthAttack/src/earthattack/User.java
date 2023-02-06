@@ -43,11 +43,7 @@ public class User {
      * {@code User}.
      */
     User(String nName, double nScore) {
-        if (User.validUser(nName)) {
-            this.name = nName;
-        } else {
-            this.name = "";
-        }
+        this.name = nName;
         this.score = nScore;
         users.add(this);
     }
@@ -102,28 +98,29 @@ public class User {
      */
     static boolean validUser(String name) {
         // Applied checks to make sure the name is printable
-        boolean bool = true;
-        boolean done = false;
         // Checks if the names length is inferior or equal to 8.
+		boolean usernameFound = false, carCorrect = false;
         if (name.toCharArray().length <= 8) {
-            while (bool && !done) {
                 for (User u : users) {
                     //Checks if the username isn't already used by another User.
-                    bool = u.name != name & !name.isEmpty();
+                    usernameFound = !u.name.toLowerCase().equals(name.toLowerCase());
+					if(!usernameFound){
+						break;
+					}
                 }
                 char[] cars = name.toCharArray();
                 for (char c : cars) {
                     // Checks if c is in the AlphaNumerical format.
-                    bool = (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9');
+                    carCorrect = (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9');
                 }
-                done = true;
-            }
+                
+            
         }else{
 			System.out.println("Vous devez rentrer une pseudo étant égal à 8 caractères maximum !");
-            bool = false;
+            usernameFound = false;
+            carCorrect = false;
         }
-
-        return bool;
+        return usernameFound && carCorrect;
     }
 
     /**
@@ -173,7 +170,7 @@ public class User {
         String name = "";
         do {
             System.out.println("Saisisez un pseudonyme.");
-            name = sc.next();
+            name = sc.nextLine();
         } while (!User.validUser(name));
 
         return new User(name, 0);

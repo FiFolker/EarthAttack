@@ -16,7 +16,7 @@ public class EarthAttack {
     static int numberOfQuestion = 2;
     static final String[] answerSheets = new String[10];
     static Scanner input = new Scanner(System.in);
-    private static final Duration MAX_DURATION = Duration.ofSeconds(1200);
+    private static Duration MAX_DURATION = Duration.ofSeconds(1200);
     private static final int PENALTY = 30;
 
     /**
@@ -89,11 +89,15 @@ public class EarthAttack {
                     ex.printStackTrace();
                 }
                 i++;
-            } else {
-                System.out.println("Perdu ... vous avez perdu <time> min/sec !");
-                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
-            }
-        } while (i < questions.length && run && elapsedTime.compareTo(MAX_DURATION) < 0);
+            } else if(reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd'){
+                System.out.println("Perdu ... vous avez perdu " + PENALTY + " sec !");
+				System.out.println(MAX_DURATION);
+				MAX_DURATION.minus(Duration.ofSeconds(PENALTY));
+				System.out.println(MAX_DURATION);
+            }else{
+				System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+			}
+        } while (i < questions.length && run && elapsedTime.compareTo(MAX_DURATION) < 0 && !MAX_DURATION.isNegative());
         if (elapsedTime.compareTo(MAX_DURATION) < 0) {
             System.out.println("Good End");
             UI.showGoodEnd();
