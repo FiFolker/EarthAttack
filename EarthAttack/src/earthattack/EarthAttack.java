@@ -18,12 +18,11 @@ public class EarthAttack {
     static Scanner input = new Scanner(System.in);
     private static final Duration MAX_DURATION = Duration.ofSeconds(1200);
     private static final int PENALTY = 30;
-    
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Exception{
+    public static void main(String[] args) throws Exception {
 
         var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
         Duration elapsedTime;
@@ -32,14 +31,14 @@ public class EarthAttack {
         do {
             elapsedTime = Duration.between(startTime, Instant.now());
             // QCM
-            
+            menu();
+
         } while (run && elapsedTime.compareTo(MAX_DURATION) < 0); // Le inférieur à 0 c'est comment compareTo fonctionne
 
         initialiseAnswers(answerSheets);
         User.initialiseUsers();
-		User usr = User.userSelect();
-		
-        menu();
+        User usr = User.userSelect();
+
     }
 
     /**
@@ -66,21 +65,23 @@ public class EarthAttack {
             }
         } while (choice != 3);
     }
-    
+
     /**
-     * Lance le QUIZZ en affichant les questions, prenant une réponse et donnant le résultat.
+     * Lance le QUIZZ en affichant les questions, prenant une réponse et donnant
+     * le résultat.
+     *
      * @param questions Questions loaded
      */
-    static void play(Question[] questions){
-		
-		var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
-		Duration elapsedTime;
-		boolean run = true;
+    static void play(Question[] questions) {
+
+        var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
+        Duration elapsedTime;
+        boolean run = true;
         int i = 0;
         String reply = "";
         boolean correctAnswer = false;
         do {
-			elapsedTime = Duration.between(startTime, Instant.now());
+            elapsedTime = Duration.between(startTime, Instant.now());
             UI.showEarth();
             questions[i].showQuestion(answerSheets[i]);
             reply = input.next();
@@ -98,21 +99,21 @@ public class EarthAttack {
                 System.out.println("Perdu ... vous avez perdu <time> min/sec !");
                 System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
             }
-        } while (i < questions.length && run && elapsedTime.compareTo(MAX_DURATION) < 0); 
-		if(elapsedTime.compareTo(MAX_DURATION) < 0){
-			System.out.println("Good End");
-			UI.showGoodEnd();	
-		}else{
-			System.out.println("Bad End");
-			UI.showBadEnd();
-		}
-        
-		try{
-			TimeUnit.SECONDS.sleep(2);
-		}catch(Exception ex){
-			System.out.println("Exception sleep dans play : " + ex);
-		}
-		
+        } while (i < questions.length && run && elapsedTime.compareTo(MAX_DURATION) < 0);
+        if (elapsedTime.compareTo(MAX_DURATION) < 0) {
+            System.out.println("Good End");
+            UI.showGoodEnd();
+        } else {
+            System.out.println("Bad End");
+            UI.showBadEnd();
+        }
+
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (Exception ex) {
+            System.out.println("Exception sleep dans play : " + ex);
+        }
+
     }
 
     /**
@@ -148,7 +149,7 @@ public class EarthAttack {
         String[] order = new String[numberOfQuestion];
 
         for (int i = 0; i < FILES.length; i++) {
-            try ( Scanner fileRead = new Scanner(new File(FILES[i]))) {
+            try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
                 temp = fileRead.nextLine();
 
                 String[] split = temp.split(";");
