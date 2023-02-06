@@ -3,6 +3,7 @@ package earthattack;
 import java.io.File;
 import java.time.Duration;
 import java.time.Instant;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -43,7 +44,11 @@ public class EarthAttack {
         int choice = 0;
         do {
             UI.showMenu();
-            choice = input.nextInt();
+			try {
+				choice = input.nextInt();
+			} catch (InputMismatchException ex) {
+				System.out.println("Il faut rentrer un entier compris entre 1 et 3 !");
+			}
             switch (choice) {
                 case 1:
                     play(questionLoaded);
@@ -130,35 +135,37 @@ public class EarthAttack {
      */
     static void play(Question[] questions) {
         var startTime = Instant.now();
-        Duration elapsedTime;
-        boolean run = true;
-        int i = 0;
-        String reply = "";
-        boolean correctAnswer = false;
-        do {
-            elapsedTime = Duration.between(startTime, Instant.now());
-            UI.showEarth();
-            questions[i].showQuestion(answerSheets[i]);
-            reply = input.next();
-            correctAnswer = reply.toLowerCase().equals(questions[i].answer);
-            if (correctAnswer) {
-                System.out.println("Bonne réponse !");
-                try {
-                    loadingNextAnswer(correctAnswer);
-                } catch (Exception ex) {
-                    System.out.println("le loading next answer a fait n'imp " + ex);
-                    ex.printStackTrace();
-                }
-                i++;
-            } else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
-                System.out.println("Perdu ... vous avez perdu " + PENALTY + " sec !");
-                System.out.println(MAX_DURATION);
-                MAX_DURATION.minus(Duration.ofSeconds(PENALTY));
-                System.out.println(MAX_DURATION);
-            } else {
-                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
-            }
-        } while (i < questions.length && run && elapsedTime.compareTo(MAX_DURATION) < 0 && !MAX_DURATION.isNegative());
+		Duration elapsedTime;
+		int i = 0;
+		String reply = "";
+		boolean correctAnswer = false;
+
+		User usr = User.userSelect();
+
+		do {
+			elapsedTime = Duration.between(startTime, Instant.now());
+			System.out.println(elapsedTime);
+			UI.showEarth();
+			questions[i].showQuestion(answerSheets[i]);
+			reply = input.next();
+			correctAnswer = reply.toLowerCase().equals(questions[i].answer);
+			if (correctAnswer) {
+				System.out.println("Bonne réponse !");
+				try {
+					loadingNextAnswer(correctAnswer);
+				} catch (Exception ex) {
+					System.out.println("le loading next answer a fait n'imp " + ex);
+					ex.printStackTrace();
+				}
+				i++;
+			} else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
+				System.out.println("Perdu ... vous avez perdu " + PENALTY + " sec !");
+				MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(PENALTY));
+			} else {
+				System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+			}
+		} while (i < questions.length && elapsedTime.compareTo(MAX_DURATION) < 0 && !MAX_DURATION.isNegative());
+		usr.score = elapsedTime.getSeconds();
         if (elapsedTime.compareTo(MAX_DURATION) < 0) {
             System.out.println("Good End");
             UI.showGoodEnd();
@@ -172,6 +179,7 @@ public class EarthAttack {
         } catch (Exception ex) {
             System.out.println("Exception sleep dans play : " + ex);
         }
+		User.flushUsers();
 
     }
 
