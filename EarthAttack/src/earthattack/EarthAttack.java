@@ -18,12 +18,13 @@ public class EarthAttack {
     static Scanner input = new Scanner(System.in);
     private static Duration MAX_DURATION = Duration.ofSeconds(1200);
     private static final int PENALTY = 30;
+    private static String[] options = {"true", "easy"}; // options[0] = rolePlay; options[1] = difficulty; Boolean.getBoolean(options[0]);
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception {
-        
+
         // Loads all the answers in the answer sheet.
         initialiseAnswers(answerSheets);
         // Loads all the users from the leaderboard.
@@ -31,7 +32,7 @@ public class EarthAttack {
         // Asks the user to choose their username.
         User usr = User.userSelect();
         menu();
-        
+
     }
 
     /**
@@ -51,6 +52,9 @@ public class EarthAttack {
                     UI.showLeaderboard(10);
                     break;
                 case 3:
+                    optionsMenu();
+                    break;
+                case 4:
                     System.out.println("Au revoir ...");
                     break;
                 default:
@@ -58,7 +62,64 @@ public class EarthAttack {
                     break;
             }
         } while (choice != 3);
-        
+
+    }
+
+    static void optionsMenu() {
+        //UI.showOptions;
+        int mainChoice = input.nextInt();
+        switch (mainChoice) {
+            case 1:
+                roleplayChoice();
+                break;
+            case 2:
+                difficultyChoice();
+                break;
+            default:
+                break;
+        }
+    }
+
+    static void difficultyChoice() {
+        System.out.println("Voulez-vous activer les messages de RolePlay ? (O/N)");
+        Boolean correctAnswer = false;
+        while (!correctAnswer) {
+            char answer = input.nextLine().toLowerCase().charAt(0);
+            switch (answer) {
+                case 'o':
+                    options[0] = "true";
+                    correctAnswer = true;
+                    break;
+                case 'n':
+                    options[0] = "false";
+                    correctAnswer = true;
+                    break;
+                default:
+                    System.out.println("Oui ou Non seulement");
+                    break;
+            }
+        }
+    }
+    
+    static void roleplayChoice() {
+        System.out.println("Voulez-vous activer les messages de RolePlay ? (O/N)");
+        Boolean correctAnswer = false;
+        while (!correctAnswer) {
+            char answer = input.nextLine().toLowerCase().charAt(0);
+            switch (answer) {
+                case 'o':
+                    options[0] = "true";
+                    correctAnswer = true;
+                    break;
+                case 'n':
+                    options[0] = "false";
+                    correctAnswer = true;
+                    break;
+                default:
+                    System.out.println("Oui ou Non seulement");
+                    break;
+            }
+        }
     }
 
     /**
@@ -89,14 +150,14 @@ public class EarthAttack {
                     ex.printStackTrace();
                 }
                 i++;
-            } else if(reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd'){
+            } else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
                 System.out.println("Perdu ... vous avez perdu " + PENALTY + " sec !");
-				System.out.println(MAX_DURATION);
-				MAX_DURATION.minus(Duration.ofSeconds(PENALTY));
-				System.out.println(MAX_DURATION);
-            }else{
-				System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
-			}
+                System.out.println(MAX_DURATION);
+                MAX_DURATION.minus(Duration.ofSeconds(PENALTY));
+                System.out.println(MAX_DURATION);
+            } else {
+                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+            }
         } while (i < questions.length && run && elapsedTime.compareTo(MAX_DURATION) < 0 && !MAX_DURATION.isNegative());
         if (elapsedTime.compareTo(MAX_DURATION) < 0) {
             System.out.println("Good End");
