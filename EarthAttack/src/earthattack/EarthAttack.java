@@ -1,6 +1,8 @@
 package earthattack;
 
 import java.io.File;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
@@ -13,70 +15,81 @@ public class EarthAttack {
     static final String[] FILES = {"ressources/data/question", "ressources/data/answer", "ressources/data/order", "ressources/data/leaderboard"};
     static int numberOfQuestion = 2;
     static final String[] answerSheets = new String[10];
-	static Scanner input = new Scanner(System.in);
+    static Scanner input = new Scanner(System.in);
+    private static final Duration MAX_DURATION = Duration.ofSeconds(20);
 
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
+        var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
+        Duration elapsedTime;
+        boolean run = true;
+
+        do {
+            elapsedTime = Duration.between(startTime, Instant.now());
+            // QCM
+
+        } while (run && elapsedTime.compareTo(MAX_DURATION) < 0); // Le inférieur à 0 c'est comment compareTo fonctionne
+
         initialiseAnswers(answerSheets);
         //User usr = User.userSelect();
         //double startTime = System.nanoTime() / 10e9;
-		User.initialiseUsers();
-		menu();
+        User.initialiseUsers();
+        menu();
     }
-	
-	public static void menu(){
-		Question[] questionLoaded = loadQuestions();
-		int choice = 0;
-		do {
-			UI.showMenu();
-			choice = input.nextInt();
-			switch (choice) {
-				case 1:
-					play(questionLoaded);
-					break;
-				case 2:
-					UI.showLeaderboard(10);
-					break;
-				case 3:
-					System.out.println("Au revoir ...");
-					break;
-				default:
-					System.out.println("Vous devez choisir un nombre entre 1 et 3 !");
-			}
-		} while (choice != 3); 
-	}
-	
-	static void play(Question[] questions){
-		Clock clock = new Clock((System.nanoTime() / 10e9), true);
-		clock.start();
-		int i = 0;
-		String reply = "";
-		boolean correctAnswer = false;
-		do{
-			UI.showEarth();
-			questions[i].showQuestion(answerSheets[i]);
-			reply = input.next();
-			correctAnswer = reply.toLowerCase().equals(questions[i].answer);
-			if(correctAnswer){
-				System.out.println("Bonne réponse !");
-				try{
-					loadingNextAnswer(correctAnswer);
-				}catch(Exception ex){
-					System.out.println("le loading next answer a fait n'imp " + ex);
-					ex.printStackTrace();
-				}
-				i++;
-			}else{
-				System.out.println("Perdu ... vous avez perdu <time> min/sec !");
-				System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
-			}
-		}while(i<questions.length); //clock.time > 0 && 
-		UI.showBadEnd();
-		UI.showGoodEnd();
-	}
+
+    public static void menu() {
+        Question[] questionLoaded = loadQuestions();
+        int choice = 0;
+        do {
+            UI.showMenu();
+            choice = input.nextInt();
+            switch (choice) {
+                case 1:
+                    play(questionLoaded);
+                    break;
+                case 2:
+                    UI.showLeaderboard(10);
+                    break;
+                case 3:
+                    System.out.println("Au revoir ...");
+                    break;
+                default:
+                    System.out.println("Vous devez choisir un nombre entre 1 et 3 !");
+            }
+        } while (choice != 3);
+    }
+
+    static void play(Question[] questions) {
+        Clock clock = new Clock((System.nanoTime() / 10e9), true);
+        clock.start();
+        int i = 0;
+        String reply = "";
+        boolean correctAnswer = false;
+        do {
+            UI.showEarth();
+            questions[i].showQuestion(answerSheets[i]);
+            reply = input.next();
+            correctAnswer = reply.toLowerCase().equals(questions[i].answer);
+            if (correctAnswer) {
+                System.out.println("Bonne réponse !");
+                try {
+                    loadingNextAnswer(correctAnswer);
+                } catch (Exception ex) {
+                    System.out.println("le loading next answer a fait n'imp " + ex);
+                    ex.printStackTrace();
+                }
+                i++;
+            } else {
+                System.out.println("Perdu ... vous avez perdu <time> min/sec !");
+                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+            }
+        } while (i < questions.length); //clock.time > 0 && 
+        UI.showBadEnd();
+        UI.showGoodEnd();
+    }
 
     /**
      * Simule un chargement avant la prochaine question si la précèdent était
@@ -97,10 +110,11 @@ public class EarthAttack {
         }
     }
 
-	/**
-	 * Charge les questions dans un tableau d'instance de Question
-	 * @return l'array de Question
-	 */
+    /**
+     * Charge les questions dans un tableau d'instance de Question
+     *
+     * @return l'array de Question
+     */
     public static Question[] loadQuestions() {
         Question[] questions = new Question[numberOfQuestion];
 
@@ -110,7 +124,7 @@ public class EarthAttack {
         String[] order = new String[numberOfQuestion];
 
         for (int i = 0; i < FILES.length; i++) {
-            try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
+            try ( Scanner fileRead = new Scanner(new File(FILES[i]))) {
                 temp = fileRead.nextLine();
 
                 String[] split = temp.split(";");

@@ -1,12 +1,14 @@
 package earthattack;
 
+import java.util.Timer;
+
 /**
  *
  * @author calmuller
  */
 public class Clock extends Thread {
 
-    double startTime;
+    double startTime;;
     boolean run;
     double time;
 
@@ -40,5 +42,6 @@ public class Clock extends Thread {
         }
 
     }
+
 
 }
