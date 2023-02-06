@@ -24,8 +24,6 @@ public class EarthAttack {
      * @param args the command line arguments
      */
     public static void main(String[] args) throws Exception{
-<<<<<<< HEAD
-=======
 
         var startTime = Instant.now(); // A déplacer après initialisation utilisateur 
         Duration elapsedTime;
@@ -37,7 +35,6 @@ public class EarthAttack {
             
         } while (run && elapsedTime.compareTo(MAX_DURATION) < 0); // Le inférieur à 0 c'est comment compareTo fonctionne
 
->>>>>>> b721f8b (modif 1 variable)
         initialiseAnswers(answerSheets);
         User.initialiseUsers();
 		User usr = User.userSelect();
