@@ -34,6 +34,16 @@ public class EarthAttack {
         menu();
 
     }
+	
+	public static int checkIfScannerIsInt(Scanner input, int choice){
+		try {
+			choice = input.nextInt();
+		} catch (InputMismatchException ex) {
+			input.next();
+			System.out.println("Il faut rentrer un nombre entier compris dans les choix possibles !");
+		}
+		return choice;
+	}
 
     /**
      * Affiche le menu et gère les choix renvoyés
@@ -43,12 +53,7 @@ public class EarthAttack {
         int choice = 0;
         do {
             UI.showMenu();
-			try {
-				choice = input.nextInt();
-			} catch (InputMismatchException ex) {
-				input.next();
-				System.out.println("Il faut rentrer un nombre entier compris entre 1 et 4 !");
-			}
+			choice = checkIfScannerIsInt(input, choice);
             switch (choice) {
                 case 1:
                     play(questionLoaded);
@@ -72,7 +77,8 @@ public class EarthAttack {
 
     static void optionsMenu() {
         UI.showOptions();
-        int mainChoice = input.nextInt();
+        int mainChoice = -1;
+		mainChoice = checkIfScannerIsInt(input, mainChoice);
         switch (mainChoice) {
             case 1:
                 difficultyChoice();
@@ -90,7 +96,8 @@ public class EarthAttack {
                 + "(1) Facile, (2) Moyen, (3) Difficile");
         Boolean correctAnswer = false;
         while (!correctAnswer) {
-            int answer = input.nextInt();
+			int answer = -1;
+            answer = checkIfScannerIsInt(input, answer);
             switch (answer) {
                 case 1:
                     options[1] = "easy";
