@@ -20,6 +20,7 @@ public class EarthAttack {
     private static Duration MAX_DURATION = Duration.ofSeconds(1200);
     private static final int PENALTY = 30;
     private static String[] options = {"true", "easy"}; // options[0] = rolePlay; options[1] = difficulty; Boolean.getBoolean(options[0]);
+	static final int lengthLeaderboard = 10;
 
     /**
      * @param args the command line arguments
@@ -30,8 +31,6 @@ public class EarthAttack {
         initialiseAnswers(answerSheets);
         // Loads all the users from the leaderboard.
         User.initialiseUsers();
-        // Asks the user to choose their username.
-        User usr = User.userSelect();
         menu();
 
     }
@@ -54,13 +53,13 @@ public class EarthAttack {
                     play(questionLoaded);
                     break;
                 case 2:
-                    UI.showLeaderboard(10);
+                    UI.showLeaderboard(lengthLeaderboard);
                     break;
                 case 3:
                     optionsMenu();
                     break;
                 case 4:
-                    System.out.println("Au revoir ...");
+					System.out.println("Au revoir ...");
                     break;
                 default:
                     System.out.println("Vous devez choisir un nombre entre 1 et 3 !");
@@ -139,17 +138,15 @@ public class EarthAttack {
      * @param questions Questions loaded
      */
     static void play(Question[] questions) {
-        var startTime = Instant.now();
 		Duration elapsedTime;
 		int i = 0;
 		String reply = "";
-		boolean correctAnswer = false;
-
+		boolean correctAnswer = false, timeExpired = MAX_DURATION.isNegative();
+		// Asks the user to choose their username.
 		User usr = User.userSelect();
-
+		var startTime = Instant.now(); // time when user start quizz
 		do {
 			elapsedTime = Duration.between(startTime, Instant.now());
-			System.out.println(elapsedTime);
 			UI.showEarth();
 			questions[i].showQuestion(answerSheets[i]);
 			reply = input.next();
@@ -169,24 +166,30 @@ public class EarthAttack {
 			} else {
 				System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
 			}
-		} while (i < questions.length && elapsedTime.compareTo(MAX_DURATION) < 0 && !MAX_DURATION.isNegative());
-		usr.score = elapsedTime.getSeconds();
+		} while (i < questions.length && elapsedTime.compareTo(MAX_DURATION) < 0 && !timeExpired);
+		if(timeExpired){
+			usr.score = MAX_DURATION.getSeconds() - elapsedTime.getSeconds();
+		}else{
+			usr.score = 0;
+		}
+		
         if (elapsedTime.compareTo(MAX_DURATION) < 0) {
-            System.out.println("Good End");
+            System.out.println("GAGNÉ !");
             UI.showGoodEnd();
         } else {
-            System.out.println("Bad End");
+            System.out.println("PERDU ...");
             UI.showBadEnd();
         }
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (Exception ex) {
-            System.out.println("Exception sleep dans play : " + ex);
-        }
 		User.flushUsers();
-
+		showEnd(usr);
     }
+	
+	static void showEnd(User usr){
+		int rank = usr.getRank();
+		System.out.println("Vous êtes classé : " + rank + " avec " + usr.score + " points");
+		UI.showLeaderboard(lengthLeaderboard);
+		
+	}
 
     /**
      * Simule un chargement avant la prochaine question si la précèdent était

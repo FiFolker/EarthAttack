@@ -174,5 +174,17 @@ public class User {
 
         return new User(name, 0);
     }
+	
+	int getRank(){
+		int rank = -1, i = 0;
+		ArrayList<User> sortedArrayUser = sortUsers();
+		while(!this.name.equals(sortedArrayUser.get(i).name) && i <sortedArrayUser.size()){
+			i++;
+		}
+		if(this.name.equals(sortedArrayUser.get(i).name)){
+			rank = i+1;
+		}
+		return rank;
+	}
 
 }
