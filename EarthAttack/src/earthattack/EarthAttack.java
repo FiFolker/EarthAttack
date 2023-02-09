@@ -18,8 +18,8 @@ public class EarthAttack {
     static final String[] answerSheets = new String[10];
     static Scanner input = new Scanner(System.in);
     private static Duration MAX_DURATION = Duration.ofSeconds(1200);
-    private static final int PENALTY = 30;
-    private static String[] options = {"true", "easy"}; // options[0] = rolePlay; options[1] = difficulty; Boolean.getBoolean(options[0]);
+    private static int penalty = 0;
+    private static String[] options = {"true", "normal"}; // options[0] = rolePlay; options[1] = difficulty; Boolean.getBoolean(options[0]);
     static final int lengthLeaderboard = 10;
 
     /**
@@ -34,24 +34,24 @@ public class EarthAttack {
         menu();
 
     }
-	
-	/**
-	 * Check for a int scanner if the answer is also a int for catch the exception if
-	 * it's not an int
-	 * 
-	 * @param input Scanner
-	 * @param choice int answer
-	 * @return the answer
-	 */
-	public static int checkIfScannerIsInt(Scanner input, int choice){
-		try {
-			choice = input.nextInt();
-		} catch (InputMismatchException ex) {
-			input.next();
-			System.out.println("Il faut rentrer un nombre entier compris dans les choix possibles !");
-		}
-		return choice;
-	}
+
+    /**
+     * Check for a int scanner if the answer is also a int for catch the
+     * exception if it's not an int
+     *
+     * @param input Scanner
+     * @param choice int answer
+     * @return the answer
+     */
+    public static int checkIfScannerIsInt(Scanner input, int choice) {
+        try {
+            choice = input.nextInt();
+        } catch (InputMismatchException ex) {
+            input.next();
+            System.out.println("Il faut rentrer un nombre entier compris dans les choix possibles !");
+        }
+        return choice;
+    }
 
     /**
      * Affiche le menu et gère les choix renvoyés
@@ -60,6 +60,19 @@ public class EarthAttack {
         Question[] questionLoaded = loadQuestions();
         int choice = 0;
         do {
+            switch(options[1]){
+                case "easy":
+                    penalty = 20;
+                    break;
+                case "normal":
+                    penalty = 40;
+                    break;
+                case "hard":
+                    penalty = 60;
+                    break;
+                default:
+                    break;
+            }
             UI.showMenu();
             choice = checkIfScannerIsInt(input, choice);
             switch (choice) {
@@ -83,6 +96,10 @@ public class EarthAttack {
 
     }
 
+    
+    /**
+     * Function that handles the options menu.
+     */
     static void optionsMenu() {
         UI.showOptions();
         int mainChoice = -1;
@@ -108,6 +125,10 @@ public class EarthAttack {
         }
     }
 
+    
+    /**
+     * Function that handles the difficulty menu.
+     */
     static void difficultyChoice() {
         UI.showDifficultyMenu();
         Boolean correctAnswer = false;
@@ -141,6 +162,10 @@ public class EarthAttack {
         }
     }
 
+    
+    /**
+     * Function that handles the roleplay menu.
+     */
     static void roleplayChoice() {
         UI.showRoleplayMenu();
         Boolean correctAnswer = false;
@@ -173,58 +198,58 @@ public class EarthAttack {
      * @param questions Questions loaded
      */
     static void play(Question[] questions) {
-		Duration elapsedTime;
-		int i = 0;
-		String reply = "";
-		boolean correctAnswer = false, timeExpired = MAX_DURATION.isNegative();
-		// Asks the user to choose their username.
-		User usr = User.userSelect();
-		var startTime = Instant.now(); // time when user start quizz
-		do {
-			elapsedTime = Duration.between(startTime, Instant.now());
-			UI.showEarth();
-			questions[i].showQuestion(answerSheets[i]);
-			reply = input.next();
-			correctAnswer = reply.toLowerCase().equals(questions[i].answer);
-			if (correctAnswer) {
-				System.out.println("Bonne réponse !");
-				try {
-					if(i != questions.length && options[0].equals("true")){
-						loadingNextAnswer(correctAnswer);
-					}
-				} catch (Exception ex) {
-					System.out.println("le loading next answer a fait n'imp " + ex);
-					ex.printStackTrace();
-				}
-				i++;
-			} else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
-				System.out.println("Perdu ... vous avez perdu " + PENALTY + " sec !");
-				MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(PENALTY));
-			} else {
-				System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
-			}
-		} while (i < questions.length && MAX_DURATION.getSeconds()- elapsedTime.getSeconds() > 0 && !timeExpired); 
+        Duration elapsedTime;
+        int i = 0;
+        String reply = "";
+        boolean correctAnswer = false, timeExpired = MAX_DURATION.isNegative();
+        // Asks the user to choose their username.
+        User usr = User.userSelect();
+        var startTime = Instant.now(); // time when user start quizz
+        do {
+            elapsedTime = Duration.between(startTime, Instant.now());
+            UI.showEarth();
+            questions[i].showQuestion(answerSheets[i]);
+            reply = input.next();
+            correctAnswer = reply.toLowerCase().equals(questions[i].answer);
+            if (correctAnswer) {
+                System.out.println("Bonne réponse !");
+                try {
+                    if (i != questions.length && options[0].equals("true")) {
+                        loadingNextAnswer(correctAnswer);
+                    }
+                } catch (Exception ex) {
+                    System.out.println("le loading next answer a fait n'imp " + ex);
+                    ex.printStackTrace();
+                }
+                i++;
+            } else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
+                System.out.println("Perdu ... vous avez perdu " + penalty + " sec !");
+                MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(penalty));
+            } else {
+                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+            }
+        } while (i < questions.length && MAX_DURATION.getSeconds() - elapsedTime.getSeconds() > 0 && !timeExpired);
 
-		if(MAX_DURATION.getSeconds() > 0){
-			usr.score = MAX_DURATION.getSeconds() - elapsedTime.getSeconds();
-			System.out.println("GAGNÉ !");
-			UI.showGoodEnd();
-		}else{
-			System.out.println("PERDU ...");
-			UI.showBadEnd();
-			usr.score = 0;
-		}
+        if (MAX_DURATION.getSeconds() > 0) {
+            usr.score = MAX_DURATION.getSeconds() - elapsedTime.getSeconds();
+            System.out.println("GAGNÉ !");
+            UI.showGoodEnd();
+        } else {
+            System.out.println("PERDU ...");
+            UI.showBadEnd();
+            usr.score = 0;
+        }
 
-		User.flushUsers();
-		showEnd(usr);
+        User.flushUsers();
+        showEnd(usr);
     }
-	
-	static void showEnd(User usr){
-		int rank = usr.getRank();
-		System.out.println("Vous êtes classé : " + rank + "/" + User.users.size() + " avec " + usr.score + " points");
-		UI.showLeaderboard(lengthLeaderboard);
-		
-	}
+
+    static void showEnd(User usr) {
+        int rank = usr.getRank();
+        System.out.println("Vous êtes classé : " + rank + "/" + User.users.size() + " avec " + usr.score + " points");
+        UI.showLeaderboard(lengthLeaderboard);
+
+    }
 
     /**
      * Simule un chargement avant la prochaine question si la précèdent était
@@ -309,6 +334,5 @@ public class EarthAttack {
         tab[8] = "";
         tab[9] = "";
     }
-
 
 }
