@@ -34,16 +34,24 @@ public class EarthAttack {
         menu();
 
     }
-
-    public static int checkIfScannerIsInt(Scanner input, int choice) {
-        try {
-            choice = input.nextInt();
-        } catch (InputMismatchException ex) {
-            input.next();
-            System.out.println("Il faut rentrer un nombre entier compris dans les choix possibles !");
-        }
-        return choice;
-    }
+	
+	/**
+	 * Check for a int scanner if the answer is also a int for catch the exception if
+	 * it's not an int
+	 * 
+	 * @param input Scanner
+	 * @param choice int answer
+	 * @return the answer
+	 */
+	public static int checkIfScannerIsInt(Scanner input, int choice){
+		try {
+			choice = input.nextInt();
+		} catch (InputMismatchException ex) {
+			input.next();
+			System.out.println("Il faut rentrer un nombre entier compris dans les choix possibles !");
+		}
+		return choice;
+	}
 
     /**
      * Affiche le menu et gère les choix renvoyés
@@ -165,58 +173,58 @@ public class EarthAttack {
      * @param questions Questions loaded
      */
     static void play(Question[] questions) {
-        Duration elapsedTime;
-        int i = 0;
-        String reply = "";
-        boolean correctAnswer = false, timeExpired = MAX_DURATION.isNegative();
-        // Asks the user to choose their username.
-        User usr = User.userSelect();
-        var startTime = Instant.now(); // time when user start quizz
-        do {
-            elapsedTime = Duration.between(startTime, Instant.now());
-            UI.showEarth();
-            questions[i].showQuestion(answerSheets[i]);
-            reply = input.next();
-            correctAnswer = reply.toLowerCase().equals(questions[i].answer);
-            if (correctAnswer) {
-                System.out.println("Bonne réponse !");
-                try {
-                    loadingNextAnswer(correctAnswer);
-                } catch (Exception ex) {
-                    System.out.println("le loading next answer a fait n'imp " + ex);
-                    ex.printStackTrace();
-                }
-                i++;
-            } else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
-                System.out.println("Perdu ... vous avez perdu " + PENALTY + " sec !");
-                MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(PENALTY));
-            } else {
-                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
-            }
-        } while (i < questions.length && elapsedTime.compareTo(MAX_DURATION) < 0 && !timeExpired);
-        if (timeExpired) {
-            usr.score = MAX_DURATION.getSeconds() - elapsedTime.getSeconds();
-        } else {
-            usr.score = 0;
-        }
+		Duration elapsedTime;
+		int i = 0;
+		String reply = "";
+		boolean correctAnswer = false, timeExpired = MAX_DURATION.isNegative();
+		// Asks the user to choose their username.
+		User usr = User.userSelect();
+		var startTime = Instant.now(); // time when user start quizz
+		do {
+			elapsedTime = Duration.between(startTime, Instant.now());
+			UI.showEarth();
+			questions[i].showQuestion(answerSheets[i]);
+			reply = input.next();
+			correctAnswer = reply.toLowerCase().equals(questions[i].answer);
+			if (correctAnswer) {
+				System.out.println("Bonne réponse !");
+				try {
+					if(i != questions.length && options[0].equals("true")){
+						loadingNextAnswer(correctAnswer);
+					}
+				} catch (Exception ex) {
+					System.out.println("le loading next answer a fait n'imp " + ex);
+					ex.printStackTrace();
+				}
+				i++;
+			} else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
+				System.out.println("Perdu ... vous avez perdu " + PENALTY + " sec !");
+				MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(PENALTY));
+			} else {
+				System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+			}
+		} while (i < questions.length && MAX_DURATION.getSeconds()- elapsedTime.getSeconds() > 0 && !timeExpired); 
 
-        if (elapsedTime.compareTo(MAX_DURATION) < 0) {
-            System.out.println("GAGNÉ !");
-            UI.showGoodEnd();
-        } else {
-            System.out.println("PERDU...");
-            UI.showBadEnd();
-        }
-        User.flushUsers();
-        showEnd(usr);
+		if(MAX_DURATION.getSeconds() > 0){
+			usr.score = MAX_DURATION.getSeconds() - elapsedTime.getSeconds();
+			System.out.println("GAGNÉ !");
+			UI.showGoodEnd();
+		}else{
+			System.out.println("PERDU ...");
+			UI.showBadEnd();
+			usr.score = 0;
+		}
+
+		User.flushUsers();
+		showEnd(usr);
     }
-
-    static void showEnd(User usr) {
-        int rank = usr.getRank();
-        System.out.println("Vous êtes classé : " + rank + " avec " + usr.score + " points");
-        UI.showLeaderboard(lengthLeaderboard);
-
-    }
+	
+	static void showEnd(User usr){
+		int rank = usr.getRank();
+		System.out.println("Vous êtes classé : " + rank + "/" + User.users.size() + " avec " + usr.score + " points");
+		UI.showLeaderboard(lengthLeaderboard);
+		
+	}
 
     /**
      * Simule un chargement avant la prochaine question si la précèdent était
@@ -302,21 +310,5 @@ public class EarthAttack {
         tab[9] = "";
     }
 
-    /**
-     * Calcule le temps qui s'écoule.
-     *
-     * @param run booléen qui est à faux si toute les réponses ont été répondus,
-     * vrai sinon.
-     * @return le temps écoulé en secondes.
-     */
-    static double clock(boolean run, double startTime) {
-        double time = 0;
-        double currentTime;
-        while (time <= 1200 & run) {
-            currentTime = System.nanoTime() / 10e9;
-            time = currentTime - startTime;
-        }
-        return time;
-    }
 
 }

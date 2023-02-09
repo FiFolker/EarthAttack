@@ -175,6 +175,10 @@ public class User {
         return new User(name, 0);
     }
 	
+	/**
+	 * Get the actual rank of user
+	 * @return rank
+	 */
 	int getRank(){
 		int rank = -1, i = 0;
 		ArrayList<User> sortedArrayUser = sortUsers();
