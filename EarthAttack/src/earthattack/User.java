@@ -105,6 +105,7 @@ public class User {
                 //Checks if the username isn't already used by another User.
                 usernameFound = !u.name.toLowerCase().equals(name.toLowerCase());
                 if (!usernameFound) {
+					System.out.println("Nom déjà existant ! Veuillez en choisir un nouveau.");
                     break;
                 }
             }
@@ -113,6 +114,9 @@ public class User {
                 // Checks if c is in the AlphaNumerical format.
                 carCorrect = (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9');
             }
+			if (!carCorrect) {
+				System.out.println("Caractère illégal, les caratères possibles sont [A-Z], [a-z] et [0-9]");
+			}
 
         } else {
             System.out.println("Vous devez rentrer une pseudo étant égal à 8 caractères maximum !");
