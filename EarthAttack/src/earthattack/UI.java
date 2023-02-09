@@ -1,6 +1,7 @@
 package earthattack;
 
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 
 public class UI {
 
@@ -209,7 +210,12 @@ public class UI {
 			System.out.println();
 			System.out.println("\n1) Menu");
 			System.out.println("/!\\Faites 1 pour retourner au Menu/!\\");
-			choice = EarthAttack.input.nextInt();
+			try {
+				choice = EarthAttack.input.nextInt();
+			} catch (InputMismatchException ex) {
+				EarthAttack.input.next();
+				System.out.println("Il faut rentrer un nombre entier !");
+			}
 		} while (choice != 1);
 	}
 

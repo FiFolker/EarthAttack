@@ -46,7 +46,8 @@ public class EarthAttack {
 			try {
 				choice = input.nextInt();
 			} catch (InputMismatchException ex) {
-				System.out.println("Il faut rentrer un entier compris entre 1 et 3 !");
+				input.next();
+				System.out.println("Il faut rentrer un nombre entier compris entre 1 et 4 !");
 			}
             switch (choice) {
                 case 1:
