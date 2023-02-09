@@ -54,11 +54,6 @@ public class EarthAttack {
         do {
             UI.showMenu();
             choice = checkIfScannerIsInt(input, choice);
-            try {
-                choice = input.nextInt();
-            } catch (InputMismatchException ex) {
-                System.out.println("Il faut rentrer un entier compris entre 1 et 3 !");
-            }
             switch (choice) {
                 case 1:
                     play(questionLoaded);
