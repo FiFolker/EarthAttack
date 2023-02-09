@@ -2,7 +2,6 @@ package earthattack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -50,7 +49,8 @@ public class User {
 
     /**
      * Main pour test
-     * @param args 
+     *
+     * @param args
      */
     public static void main(String[] args) {
         User.initialiseUsers();
@@ -72,7 +72,7 @@ public class User {
      * instantiates them to a {@code User} and adds them to {@code User.users}.
      */
     static void initialiseUsers() {
-        try ( Scanner file = new Scanner(new File(EarthAttack.FILES[3]))) {
+        try (Scanner file = new Scanner(new File(EarthAttack.FILES[3]))) {
             while (file.hasNextLine()) {
                 String line = file.nextLine();
                 String[] userScoreTogether = line.split(";");
@@ -99,24 +99,23 @@ public class User {
     static boolean validUser(String name) {
         // Applied checks to make sure the name is printable
         // Checks if the names length is inferior or equal to 8.
-		boolean usernameFound = false, carCorrect = false;
+        boolean usernameFound = false, carCorrect = false;
         if (name.toCharArray().length <= 8) {
-                for (User u : users) {
-                    //Checks if the username isn't already used by another User.
-                    usernameFound = !u.name.toLowerCase().equals(name.toLowerCase());
-					if(!usernameFound){
-						break;
-					}
+            for (User u : users) {
+                //Checks if the username isn't already used by another User.
+                usernameFound = !u.name.toLowerCase().equals(name.toLowerCase());
+                if (!usernameFound) {
+                    break;
                 }
-                char[] cars = name.toCharArray();
-                for (char c : cars) {
-                    // Checks if c is in the AlphaNumerical format.
-                    carCorrect = (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9');
-                }
-                
-            
-        }else{
-			System.out.println("Vous devez rentrer une pseudo étant égal à 8 caractères maximum !");
+            }
+            char[] cars = name.toCharArray();
+            for (char c : cars) {
+                // Checks if c is in the AlphaNumerical format.
+                carCorrect = (c >= 'a' & c <= 'z') || (c >= 'A' & c <= 'Z') || (c >= '0' & c <= '9');
+            }
+
+        } else {
+            System.out.println("Vous devez rentrer une pseudo étant égal à 8 caractères maximum !");
             usernameFound = false;
             carCorrect = false;
         }
@@ -128,7 +127,7 @@ public class User {
      * to a file with the following format : name,score;name2,score2;
      */
     static void flushUsers() {
-        try ( PrintWriter fileLeaderboard = new PrintWriter(new File(EarthAttack.FILES[3]));) {
+        try (PrintWriter fileLeaderboard = new PrintWriter(new File(EarthAttack.FILES[3]));) {
             ArrayList<User> sortedUser = sortUsers();
             for (User u : sortedUser) {
                 fileLeaderboard.print(u.name + "," + u.score + ";");

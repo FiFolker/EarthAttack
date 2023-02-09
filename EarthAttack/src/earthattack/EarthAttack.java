@@ -66,19 +66,19 @@ public class EarthAttack {
                     System.out.println("Vous devez choisir un nombre entre 1 et 3 !");
                     break;
             }
-        } while (choice != 3);
+        } while (choice != 4);
 
     }
 
     static void optionsMenu() {
-        //UI.showOptions;
+        UI.showOptions();
         int mainChoice = input.nextInt();
         switch (mainChoice) {
             case 1:
-                roleplayChoice();
+                difficultyChoice();
                 break;
             case 2:
-                difficultyChoice();
+                roleplayChoice();
                 break;
             default:
                 break;
@@ -86,21 +86,26 @@ public class EarthAttack {
     }
 
     static void difficultyChoice() {
-        System.out.println("Voulez-vous activer les messages de RolePlay ? (O/N)");
+        System.out.println("Quel est votre choix de difficultée ?\n"
+                + "(1) Facile, (2) Moyen, (3) Difficile");
         Boolean correctAnswer = false;
         while (!correctAnswer) {
-            char answer = input.nextLine().toLowerCase().charAt(0);
+            int answer = input.nextInt();
             switch (answer) {
-                case 'o':
-                    options[0] = "true";
+                case 1:
+                    options[1] = "easy";
                     correctAnswer = true;
                     break;
-                case 'n':
-                    options[0] = "false";
+                case 2:
+                    options[1] = "normal";
+                    correctAnswer = true;
+                    break;
+                case 3:
+                    options[1] = "hard";
                     correctAnswer = true;
                     break;
                 default:
-                    System.out.println("Oui ou Non seulement");
+                    System.out.println("1, 2 ou 3 seulement");
                     break;
             }
         }
