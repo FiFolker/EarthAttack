@@ -12,9 +12,14 @@ import java.util.concurrent.TimeUnit;
  * @author msuzin, calmuller, ellemerle, onaib
  */
 public class EarthAttack {
-
-    static final String[] FILES = {"ressources/data/question", "ressources/data/answer", "ressources/data/order", "ressources/data/leaderboard"};
-    static int numberOfQuestion = 2;
+    static final String SYS_SEPARATOR = System.getProperty("file.separator");
+    
+    static final String[] FILES = {"ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"question",
+                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"answer",
+                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"order",
+                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"leaderboard",
+                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"logs"};
+    static int numberOfQuestion = 3;
     static final String[] answerSheets = new String[10];
     static Scanner input = new Scanner(System.in);
     private static Duration MAX_DURATION = Duration.ofSeconds(1200);
@@ -32,7 +37,7 @@ public class EarthAttack {
         // Loads all the users from the leaderboard.
         User.initialiseUsers();
         menu();
-
+        
     }
 
     /**
