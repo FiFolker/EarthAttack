@@ -4,3 +4,7 @@
 /earthattack.iml
 /out
 /.idea
+*.iml
+*.class
+*.jar*
+.gitignore
