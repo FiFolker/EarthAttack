@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Other/File.java to edit this template
- */
 package earthattack;
 
 public class Question {
@@ -39,7 +35,7 @@ public class Question {
     public static void main(String[] args){
         Question q1 = new Question("nom1","desc1","rep1");
         String str = "A) Reponse a; B) Reponse b; C) Reponse c; D) Reponse d;";
-        q1.afficherQuestion(str);
+        q1.showQuestion(str);
         System.out.println(q1.answer);
     }
     
@@ -73,7 +69,7 @@ public class Question {
      * 
      * @param allA {@code String} représentant l'ensemble des réponse de la {@code Question}.
      */
-    void afficherQuestion(String allA){
+    void showQuestion(String allA){
         StringBuilder str = new StringBuilder();
         str.append("Restauration : ")
            .append(this.name)
