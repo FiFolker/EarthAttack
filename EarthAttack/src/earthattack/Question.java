@@ -6,6 +6,8 @@ public class Question {
         Format du fichier question.
         nom1,description1;nom2,description2;
     
+        Utiliser le caractère '^' à la place de \n
+    
         Format du fichier answer.
         rep1;rep2;rep3;
         
@@ -42,7 +44,8 @@ public class Question {
     String name;
     String description;
     String answer;
-
+    static final String SYS_LINE_SEP = System.lineSeparator();
+    static final String Q_LINE_SEP = "^";
     
     /***
      * Constructeur par défaut de la classe Question.
@@ -70,13 +73,31 @@ public class Question {
      * @param allA {@code String} représentant l'ensemble des réponse de la {@code Question}.
      */
     void showQuestion(String allA){
-        StringBuilder str = new StringBuilder();
-        str.append("Restauration : ")
-           .append(this.name)
-           .append("\n\t")
-           .append(this.description)
-           .append("\n\t")
-           .append(allA);
-        System.out.println(str.toString());
+        
+        System.out.println("Instruction : ");
+        
+        String[] name = Question.formatLine(this.name,Q_LINE_SEP);
+        for(int i =0;i<name.length;i++){
+            System.out.print("\t");
+            System.out.print(name[i] + SYS_LINE_SEP);
+        }
+        System.out.println("");
+        String[] desc = Question.formatLine(this.description,Q_LINE_SEP);
+        for(int i =0;i<desc.length;i++){
+            System.out.print("\t");
+            System.out.print(desc[i] + SYS_LINE_SEP);
+        }
+        
+        System.out.println("\t"+allA);
+    }
+    
+    /***
+     * 
+     * @param line {@code String} represents the formatted line
+     * @param sep {@code String} represents the separator used to format the line
+     * @return {@code String[]} that contains the terms in {@code line} separated by {@code sep}
+     */
+    public static String[] formatLine(String line, String sep){
+        return line.split("\\"+sep);
     }
 }

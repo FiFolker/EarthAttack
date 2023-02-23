@@ -6,6 +6,8 @@ import java.time.Instant;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,7 +32,7 @@ public class EarthAttack {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         // Loads all the answers in the answer sheet.
         initialiseAnswers(answerSheets);
@@ -211,6 +213,11 @@ public class EarthAttack {
         User usr = User.userSelect();
         var startTime = Instant.now(); // time when user start quizz
         do {
+            try {
+                TimeUnit.SECONDS.sleep((long) 1);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(EarthAttack.class.getName()).log(Level.SEVERE, null, ex);
+            }
             elapsedTime = Duration.between(startTime, Instant.now());
             UI.showEarth();
             questions[i].showQuestion(answerSheets[i]);
@@ -290,6 +297,7 @@ public class EarthAttack {
 
         for (int i = 0; i < FILES.length; i++) {
             try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
+                if(!fileRead.hasNextLine()){break;}
                 temp = fileRead.nextLine();
 
                 String[] split = temp.split(";");
