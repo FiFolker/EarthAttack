@@ -1,23 +1,10 @@
-<<<<<<< HEAD
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
-=======
->>>>>>> dev
 package earthattack;
 
 import java.io.File;
 import java.io.FileNotFoundException;
-<<<<<<< HEAD
-import java.io.FileReader;
-import java.io.IOException;
-import java.util.ArrayList;
-=======
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Comparator;
->>>>>>> dev
 import java.util.HashSet;
 import java.util.Scanner;
 import java.util.logging.Level;
@@ -33,44 +20,17 @@ public class User {
     String name;
     static HashSet<User> users = new HashSet<>();
 
-<<<<<<< HEAD
-=======
     /**
      * The Default Class Constructor Instantiates a {@code User} with
      * {@code this.name = ""} and {@code this.score = 0.} It then adds them to
      * {@code User.users}.
      */
->>>>>>> dev
     User() {
         this.name = "";
         this.score = 0.;
         users.add(this);
     }
 
-<<<<<<< HEAD
-    User(String nName, double nScore) {
-        this.name = nName;
-        this.score = nScore;
-    }
-
-    public static void main(String[] args) {
-        User.initialiseUsers();
-        System.out.println(User.users.toString());
-    }
-
-    static void initialiseUsers() {
-        try (Scanner file = new Scanner(new File(EarthAttack.FILES[3]))) {
-            while (file.hasNextLine()) {
-                String line = file.next();
-                String[] userScoreTogether = line.split(";");
-                System.out.println(userScoreTogether.length);
-                for (int i = 0; i < userScoreTogether.length - 1; i++) {
-                    String[][] userInfo = new String[userScoreTogether.length][2];
-                    for (int j = 0; j < 2; i++) {
-                        userInfo[i][j] = userScoreTogether[i].split(",")[j];
-                    }
-                    User user = new User(userInfo[i][0], Integer.parseInt(userInfo[i][1]));
-=======
     /**
      * The Intended Class Constructor Instantiates a {@code User} with
      * {@code this.name = nName} and {@code this.score = nScore} It checks if
@@ -122,7 +82,6 @@ public class User {
                         userInfo[i][j] = userScoreTogether[i].split(",")[j];
                     }
                     User user = new User(userInfo[i][0], Double.parseDouble(userInfo[i][1]));
->>>>>>> dev
                     users.add(user);
                 }
             }
@@ -131,17 +90,6 @@ public class User {
         }
     }
 
-<<<<<<< HEAD
-    static boolean validUser(String name) {
-        // Could apply different rules to format names but it isn't needed YET
-        return users.contains(name) & !name.isEmpty();
-    }
-
-    static void flushUsers() {
-
-    }
-
-=======
     /**
      * Checks if the name is valid or not
      *
@@ -220,19 +168,11 @@ public class User {
      *
      * @return {@code User} with a valid name.
      */
->>>>>>> dev
     static User userSelect() {
         Scanner sc = new Scanner(System.in);
         String name = "";
         do {
             System.out.println("Saisisez un pseudonyme.");
-<<<<<<< HEAD
-            name = sc.next();
-        } while (User.validUser(name));
-
-        return new User(name, 0);
-    }
-=======
             name = sc.nextLine();
         } while (!User.validUser(name));
 
@@ -254,6 +194,5 @@ public class User {
 		}
 		return rank;
 	}
->>>>>>> dev
 
 }
