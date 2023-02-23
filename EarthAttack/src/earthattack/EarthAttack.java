@@ -1,11 +1,17 @@
 package earthattack;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -30,7 +36,7 @@ public class EarthAttack {
     /**
      * @param args the command line arguments
      */
-    public static void main(String[] args) throws Exception {
+    public static void main(String[] args) {
 
         // Loads all the answers in the answer sheet.
         initialiseAnswers(answerSheets);
@@ -211,10 +217,16 @@ public class EarthAttack {
         User usr = User.userSelect();
         var startTime = Instant.now(); // time when user start quizz
         do {
+            try {
+                TimeUnit.SECONDS.sleep((long) 1);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(EarthAttack.class.getName()).log(Level.SEVERE, null, ex);
+            }
             elapsedTime = Duration.between(startTime, Instant.now());
             UI.showEarth();
             questions[i].showQuestion(answerSheets[i]);
             reply = input.next();
+            logs(reply, usr, i);
             correctAnswer = reply.toLowerCase().equals(questions[i].answer);
             if (correctAnswer) {
                 System.out.println("Bonne réponse !");
@@ -290,6 +302,7 @@ public class EarthAttack {
 
         for (int i = 0; i < FILES.length; i++) {
             try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
+                if(!fileRead.hasNextLine()){break;}
                 temp = fileRead.nextLine();
 
                 String[] split = temp.split(";");
@@ -338,6 +351,24 @@ public class EarthAttack {
         tab[7] = "";
         tab[8] = "";
         tab[9] = "";
+    }
+    
+    
+    public static void logs(String reply, User usr, int questionNumber) {
+        
+        try {
+            FileWriter fileWriter = new FileWriter(FILES[4], true);
+            PrintWriter logs = new PrintWriter(fileWriter);
+            logs.println(usr.name);
+            logs.println("Réponses pour la question numéro : " + questionNumber);
+            logs.println(reply);
+            logs.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println("Ouverture du fichier impossible : " + ex);
+        } catch (IOException ex) {
+            System.out.println("Erreur d'écriture : " + ex);
+        }
+        
     }
 
 }
