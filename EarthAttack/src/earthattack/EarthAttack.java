@@ -1,6 +1,10 @@
 package earthattack;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.InputMismatchException;
@@ -215,6 +219,7 @@ public class EarthAttack {
             UI.showEarth();
             questions[i].showQuestion(answerSheets[i]);
             reply = input.next();
+            logs(reply, usr, i);
             correctAnswer = reply.toLowerCase().equals(questions[i].answer);
             if (correctAnswer) {
                 System.out.println("Bonne réponse !");
@@ -338,6 +343,24 @@ public class EarthAttack {
         tab[7] = "";
         tab[8] = "";
         tab[9] = "";
+    }
+    
+    
+    public static void logs(String reply, User usr, int questionNumber) {
+        
+        try {
+            FileWriter fileWriter = new FileWriter(FILES[4], true);
+            PrintWriter logs = new PrintWriter(fileWriter);
+            logs.println(usr.name);
+            logs.println("Réponses pour la question numéro : " + questionNumber);
+            logs.println(reply);
+            logs.close();
+        } catch (FileNotFoundException ex) {
+            System.out.println("Ouverture du fichier impossible : " + ex);
+        } catch (IOException ex) {
+            System.out.println("Erreur d'écriture : " + ex);
+        }
+        
     }
 
 }
