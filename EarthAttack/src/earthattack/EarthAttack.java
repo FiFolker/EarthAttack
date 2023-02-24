@@ -28,7 +28,7 @@ public class EarthAttack {
     static int numberOfQuestion = 3;
     static final String[] answerSheets = new String[10];
     static Scanner input = new Scanner(System.in);
-    private static Duration MAX_DURATION = Duration.ofSeconds(1200);
+    private static Duration MAX_DURATION = Duration.ofSeconds(10);
     private static int penalty = 0;
     private static String[] options = {"true", "normal"}; // options[0] = rolePlay; options[1] = difficulty; Boolean.getBoolean(options[0]);
     static final int lengthLeaderboard = 10;
@@ -46,7 +46,7 @@ public class EarthAttack {
         
     }
 
-    /**
+    /**php include html
      * Check for a int scanner if the answer is also a int for catch the
      * exception if it's not an int
      *
@@ -242,6 +242,11 @@ public class EarthAttack {
             } else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
                 System.out.println("Perdu ... vous avez perdu " + penalty + " sec !");
                 MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(penalty));
+				Duration tempElapsed = Duration.between(startTime, Instant.now());
+				tempElapsed = MAX_DURATION.minus(tempElapsed);
+				if(tempElapsed.getSeconds() > 0){
+					System.out.println("Il vous reste maintenant " + (tempElapsed.toString().substring(2, 7) + "S"));
+				}
             } else {
                 System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
             }
