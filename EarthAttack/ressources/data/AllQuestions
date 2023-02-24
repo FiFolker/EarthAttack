@@ -1,0 +1,76 @@
+All questions
+2;0;1;4;3;6;5;7
+a;c;d;b;b;c;a;a
+Q1 :
+Revenons à notre météorite... Le lance missile a besoin de récupérer les coordonnées de l’astéroïde pour pouvoir le détruire.,^De quelle type doit être notre variable pour stocker cette information ?;
+R1 :
+d
+A : "int"    B: "double"     C:"boolean"    D:"String"
+
+Q2 :
+Il y a eu une erreur dans le stockage des coordonnées.^Que faut-il ajouter au code suivant pour éviter l'erreur de stockage ?
+R2 :
+A
+A : " ; "        B: " , "            C: " : "      D : " ! " 
+
+Q3 :
+Le lance missile est soumis à certaines conditions avant de pouvoir faire feu :^Quand la météorite est à portée, si il est armé, et si le lance missile est fonctionnel.^Quelle série d'opérateurs (en tenant compte de l'ordre) doit-on utiliser pour compléter le code suivant ?
+R3 :
+C
+A : "MissileArme  || Aporté  && NonFonctionnel"        
+B: " MissileArme && Aporté &&  NonFonctionnel"            
+C: " MissileArme && Aporté  !NonFonctionnel"      
+D : "MissileArme && Aporté  && NonFonctionnel" 
+
+Q4 :
+Quelle sera la valeur de la variable FaireFeu une fois corrigée ?
+R4 :
+B
+A : "  true "        B: "  false  "            C: "  -1 "      D : " ERREUR "
+
+Q5 :
+Pour réussir à détruire l'astéroïde, il est nécessaire que la portée du missile soit supérieure ou égale à la distance entre le lance-missile et l'astéroïde, OU que la taille de votre missile soit supérieure ou égale à la taille de l'astéroïde.^Quelle est la condition qu'il faut utiliser parmi les suivantes ?
+R5 :
+B
+A. if (missilePortee > distanceAsteroide && missileTaille > asteroideTaille)
+B. if (missilePortee > distanceAsteroide || missileTaille >= asteroideTaille)
+C. if (missilePortee >= distanceAsteroide || missileTaille < asteroideTaille)
+D. if (missilePortee == distanceAsteroide || missileTaille <= asteroideTaille)
+
+Q6 :
+Vous avez besoin d'afficher le nombre de missiles qu'il vous reste à chaque itération(tour de boucles) d'une boucle for.^Si vous disposez de 10 missiles, quelle boucle for doit être utilisée pour accomplir cette tâche?
+R6 :
+A
+A. for (int i = 10; i > 0; i--)
+B. for (int i = 1; i <= 10; i++)
+C. for (int i = 0; i < 10; i++)
+D. for (int i = 0; i <= 10; i++)
+
+Q7 :
+Afin de savoir si le lance missile doit continuer à tirer il faut détecter si l'astéroïde a été détruit ou non. Pour ce faire nous utilisons une boucle while.^3 missiles sont nécessaires pour détruire l'astéroïde. On initialise la variable "missileTires" à 0.^Quelle boucle while faut-il utilisée pour accomplir cette tâche?
+R7 :
+C
+A.
+while (missilesTires < 3) {
+\t//Code
+}
+B.
+while (missilesTires <= 3) {
+\t//Code
+}
+C.
+while (missilesTires != 3) {
+\t//Code
+}
+D.
+while (missilesTires > 3) {
+\t//Code
+}
+
+Ce bloc de code se trouve dans toutes nos boucles while ;^FonctionLancerMissiles();^missilesTires++;
+
+Q8 :
+Nous y sommes presque ! Lors de leurs lancements les missiles ont besoin d'éviter les débris de l’astéroïde afin de ne pas exploser avant d'atteindre leurs cible.^Pour ce faire, chaque missile est muni d'un capteur qui lui indique lorsqu'un débris est face à lui.^Avec cette information la fonction "FonctionEviterDebris" est censé nous dire si le missile doit esquiver ou non.^Il existe plusieurs version de cette fonction, choisissez la bonne !^Les Fonctions peuvent être retrouver le polycopier
+R8 :
+A
+A. Version A  B. Version B  C. Version C  D. Version D

@@ -18,14 +18,15 @@ import java.util.logging.Logger;
  * @author msuzin, calmuller, ellemerle, onaib
  */
 public class EarthAttack {
+
     static final String SYS_SEPARATOR = System.getProperty("file.separator");
-    
-    static final String[] FILES = {"ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"question",
-                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"answer",
-                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"order",
-                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"leaderboard",
-                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"logs"};
-    static int numberOfQuestion = 3;
+
+    static final String[] FILES = {"ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "question",
+        "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "answer",
+        "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "order",
+        "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "leaderboard",
+        "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "logs"};
+    static int numberOfQuestion = 7;
     static final String[] answerSheets = new String[10];
     static Scanner input = new Scanner(System.in);
     private static Duration MAX_DURATION = Duration.ofSeconds(10);
@@ -43,7 +44,7 @@ public class EarthAttack {
         // Loads all the users from the leaderboard.
         User.initialiseUsers();
         menu();
-        
+
     }
 
     /**php include html
@@ -71,7 +72,7 @@ public class EarthAttack {
         Question[] questionLoaded = loadQuestions();
         int choice = 0;
         do {
-            switch(options[1]){
+            switch (options[1]) {
                 case "easy":
                     penalty = 20;
                     break;
@@ -107,7 +108,6 @@ public class EarthAttack {
 
     }
 
-    
     /**
      * Function that handles the options menu.
      */
@@ -136,7 +136,6 @@ public class EarthAttack {
         }
     }
 
-    
     /**
      * Function that handles the difficulty menu.
      */
@@ -173,7 +172,6 @@ public class EarthAttack {
         }
     }
 
-    
     /**
      * Function that handles the roleplay menu.
      */
@@ -307,7 +305,9 @@ public class EarthAttack {
 
         for (int i = 0; i < FILES.length; i++) {
             try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
-                if(!fileRead.hasNextLine()){break;}
+                if (!fileRead.hasNextLine()) {
+                    break;
+                }
                 temp = fileRead.nextLine();
 
                 String[] split = temp.split(";");
@@ -346,21 +346,46 @@ public class EarthAttack {
      * @param tab tableau contenants l'entiérté des réponses
      */
     static void initialiseAnswers(String[] tab) {
-        tab[0] = "A) c'est pas elle ; B) try 2; C) c'est elle ; D) try 4";
-        tab[1] = "A) c'est elle ; B) try 22; C) try 23; D) c'est pas elle";
-        tab[2] = "";
-        tab[3] = "";
-        tab[4] = "";
-        tab[5] = "";
-        tab[6] = "";
-        tab[7] = "";
+        tab[0] = "A : \"int\"    B: \"double\"     C:\"boolean\"    D:\"String\"";
+        tab[1] = "A : \" ; \"        B: \" , \"            C: \" : \"      D : \" ! \" ";
+        tab[2] = "A : \"MissileArme  || Aporté  && NonFonctionnel\"        \n"
+                + "B: \" MissileArme && Aporté &&  NonFonctionnel\"            \n"
+                + "C: \" MissileArme && Aporté  !NonFonctionnel\"      \n"
+                + "D : \"MissileArme && Aporté  && NonFonctionnel\" ";
+        tab[3] = "A : \"  true \"        B: \"  false  \"            C: \"  -1 \"      D : \" ERREUR \"";
+        tab[4] = "A. if (missilePortee > distanceAsteroide && missileTaille > asteroideTaille)\n"
+                + "B. if (missilePortee > distanceAsteroide || missileTaille >= asteroideTaille)\n"
+                + "C. if (missilePortee >= distanceAsteroide || missileTaille < asteroideTaille)\n"
+                + "D. if (missilePortee == distanceAsteroide || missileTaille <= asteroideTaille)";
+        tab[5] = "A. for (int i = 10; i > 0; i--)\n"
+                + "B. for (int i = 1; i <= 10; i++)\n"
+                + "C. for (int i = 0; i < 10; i++)\n"
+                + "D. for (int i = 0; i <= 10; i++)";
+        tab[6] = "A.\n"
+                + "while (missilesTires < 3) {\n"
+                + "\t//Code\n"
+                + "}\n"
+                + "B.\n"
+                + "while (missilesTires <= 3) {\n"
+                + "\t//Code\n"
+                + "}\n"
+                + "C.\n"
+                + "while (missilesTires != 3) {\n"
+                + "\t//Code\n"
+                + "}\n"
+                + "D.\n"
+                + "while (missilesTires > 3) {\n"
+                + "\t//Code\n"
+                + "}\n"
+                + "\n"
+                + "Ce bloc de code se trouve dans toutes nos boucles while ;^FonctionLancerMissiles();^missilesTires++;";
+        tab[7] = "A. Version A  B. Version B  C. Version C  D. Version D";
         tab[8] = "";
         tab[9] = "";
     }
-    
-    
+
     public static void logs(String reply, User usr, int questionNumber) {
-        
+
         try {
             FileWriter fileWriter = new FileWriter(FILES[4], true);
             PrintWriter logs = new PrintWriter(fileWriter);
@@ -373,7 +398,7 @@ public class EarthAttack {
         } catch (IOException ex) {
             System.out.println("Erreur d'écriture : " + ex);
         }
-        
+
     }
 
 }
