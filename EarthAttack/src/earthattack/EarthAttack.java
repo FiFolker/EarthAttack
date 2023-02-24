@@ -395,7 +395,20 @@ public class EarthAttack {
                 + "B : \"fonctionDistanceCibles\"\n"
                 + "C : \"fonctionTrajectoireV\"\n"
                 + "D : \"fonctionCorrectionDesTirs\"";
-        tab[9] = "";
+        tab[9] = "A : \"void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "\tfor(int i=coord.length(); i>0; i--){\n"
+				+ "\t\tString temp = Coord[i+1];\n"
+				+ "\t\tcoord[i] = temp;\n"
+				+ "\t} \n"
+				+ "\tcoord[0] = nouvelleCoord;\n"
+				+ "}\"\n"
+				+ "B : void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "   for(int i=0; i<coord.lenght()-1; i++){\n"
+				+ "      String temp = Coord[i+1];\n"
+				+ "      coord[i] = temp;\n"
+				+ "    } \n"
+				+ "    coord[0] = nouvelleCoord;\n"
+				+ "}";
     }
 
     public static void logs(String reply, User usr, int questionNumber) {

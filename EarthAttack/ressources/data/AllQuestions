@@ -88,3 +88,36 @@ C : "fonctionTrajectoireV"
 D : "fonctionCorrectionDesTirs"
 
 Q10 : 
+Dernière ligne droite !#Le lance-missiles possède les fameuses coordonnées de la météorite qui tombe vers la Terre au fur et à mesure de sa chute.^ Elle garde en mémoire les coordonnées des 60 dernières minutes pour ses calculs.^ Lors de la réception des données, il est nécessaire de les actualiser en permanence quand de nouvelles valeurs arrivent.^ Choisissez la bonne version.
+
+A : "void actualiseCoordonnee(String[] coord, String nouvelleCoord){
+   for(int i=coord.length(); i>0; i--){
+      String temp = Coord[i+1];
+      coord[i] = temp;
+    } 
+    coord[0] = nouvelleCoord;
+}"
+
+B : void actualiseCoordonnee(String[] coord, String nouvelleCoord){
+   for(int i=0; i<coord.lenght()-1; i++){
+      String temp = Coord[i+1];
+      coord[i] = temp;
+    } 
+    coord[0] = nouvelleCoord;
+}
+
+C : "void actualiseCoordonnee(String[] coord, String nouvelleCoord){
+   for(int i=coord.length(); i>0; i--){
+      String temp = Coord[i-1];
+      coord[i] = temp;
+    } 
+    coord[0] = nouvelleCoord;
+}"
+
+D : "void actualiseCoordonnee(String[] coord, String nouvelleCoord){
+   for(int i=coord.length(); i>=0; i--){
+      String temp = Coord[i-1];
+      coord[i] = temp;
+    } 
+    coord[0] = nouvelleCoord;
+}"
