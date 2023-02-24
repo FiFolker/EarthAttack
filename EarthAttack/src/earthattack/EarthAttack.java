@@ -33,7 +33,7 @@ public class EarthAttack {
     static int numberOfQuestion = 10;
     static final String[] answerSheets = new String[10];
     static Scanner input = new Scanner(System.in);
-    private static Duration MAX_DURATION = Duration.ofSeconds(10);
+    private static Duration MAX_DURATION = Duration.ofSeconds(1200);
     private static int penalty = 0;
     private static String[] options = {"true", "normal"}; // options[0] = rolePlay; options[1] = difficulty; Boolean.getBoolean(options[0]);
     static final int lengthLeaderboard = 10;
@@ -231,6 +231,7 @@ public class EarthAttack {
             elapsedTime = Duration.between(startTime, Instant.now());
             UI.showEarth();
             questions[nbGoodAnswers].showQuestion(answerSheets[nbGoodAnswers]);
+			System.out.print("\nSaisir réponse :\n>>");
             reply = input.next();
             logs(reply, usr, nbGoodAnswers);
             correctAnswer = reply.toLowerCase().equals(questions[nbGoodAnswers].answer);
@@ -246,8 +247,8 @@ public class EarthAttack {
                 }
                 nbGoodAnswers++;
                 correctAnswer = false;
-            } else if ((reply.toLowerCase().charAt(0) > 'a' && reply.toLowerCase().charAt(0) > 'd') && !correctAnswer) {
-                System.out.println("Perdu ... vous avez perdu " + penalty + " sec !");
+            } else if ((reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') && !correctAnswer && reply.toCharArray().length == 1) {
+				System.out.println("Perdu ... vous avez perdu " + penalty + " sec !");
                 MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(penalty));
                 Duration tempElapsed = Duration.between(startTime, Instant.now());
                 tempElapsed = MAX_DURATION.minus(tempElapsed);
@@ -255,7 +256,7 @@ public class EarthAttack {
                     System.out.println("Il vous reste maintenant " + (tempElapsed.toString().substring(2, 7) + "S"));
                 }
             } else {
-                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd' ET DE NE FOURNIR QU'UN SEUL CARACTERE");
             }
         } while (nbGoodAnswers < questions.length && MAX_DURATION.getSeconds() - elapsedTime.getSeconds() > 0 && !timeExpired);
 
@@ -358,57 +359,71 @@ public class EarthAttack {
         tab[0] = "A : \"int\"    B: \"double\"     C:\"boolean\"    D:\"String\"";
         tab[1] = "A : \" ; \"        B: \" , \"            C: \" : \"      D : \" ! \" ";
         tab[2] = "A : \"missileArme  || aporté  && nonFonctionnel\"        \n"
-                + "B: \"missileArme && aporté &&  nonFonctionnel\"            \n"
-                + "C: \"missileArme && aporté  !nonFonctionnel\"      \n"
-                + "D : \"missileArme && aporté  && nonFonctionnel\" ";
-        tab[3] = "A : \"  true \"        B: \"  false  \"            C: \"  -1 \"      D : \" ERREUR \"";
+                + "\tB: \"missileArme && aporté &&  nonFonctionnel\"            \n"
+                + "\tC: \"missileArme && aporté  !nonFonctionnel\"      \n"
+                + "\tD : \"missileArme && aporté  && nonFonctionnel\" ";
+        tab[3] = "A : \" true \"        B: \" false \"            C: \" -1 \"      D : \" ERREUR \"";
         tab[4] = "A. if (missilePortee > distanceAsteroide && missileTaille > asteroideTaille)\n"
-                + "B. if (missilePortee > distanceAsteroide || missileTaille >= asteroideTaille)\n"
-                + "C. if (missilePortee >= distanceAsteroide || missileTaille < asteroideTaille)\n"
-                + "D. if (missilePortee == distanceAsteroide || missileTaille <= asteroideTaille)";
+                + "\tB. if (missilePortee > distanceAsteroide || missileTaille >= asteroideTaille)\n"
+                + "\tC. if (missilePortee >= distanceAsteroide || missileTaille < asteroideTaille)\n"
+                + "\tD. if (missilePortee == distanceAsteroide || missileTaille <= asteroideTaille)";
         tab[5] = "A. for (int i = 10; i > 0; i--)\n"
-                + "B. for (int i = 1; i <= 10; i++)\n"
-                + "C. for (int i = 0; i < 10; i++)\n"
-                + "D. for (int i = 0; i <= 10; i++)";
+                + "\tB. for (int i = 1; i <= 10; i++)\n"
+                + "\tC. for (int i = 0; i < 10; i++)\n"
+                + "\tD. for (int i = 0; i <= 10; i++)";
         tab[6] = "A.\n"
-                + "while (missilesTires < 3) {\n"
-                + "\t//Code\n"
-                + "}\n"
-                + "B.\n"
-                + "while (missilesTires <= 3) {\n"
-                + "\t//Code\n"
-                + "}\n"
-                + "C.\n"
-                + "while (missilesTires != 3) {\n"
-                + "\t//Code\n"
-                + "}\n"
-                + "D.\n"
-                + "while (missilesTires > 3) {\n"
-                + "\t//Code\n"
-                + "}\n"
+                + "\twhile (missilesTires < 3) {\n"
+                + "\t\t//Code\n"
+                + "\t}\n"
+                + "\tB.\n"
+                + "\twhile (missilesTires <= 3) {\n"
+                + "\t\t//Code\n"
+                + "\t}\n"
+                + "\tC.\n"
+                + "\twhile (missilesTires != 3) {\n"
+                + "\t\t//Code\n"
+                + "\t}\n"
+                + "\tD.\n"
+                + "\twhile (missilesTires > 3) {\n"
+                + "\t\t//Code\n"
+                + "\t}\n"
                 + "\n"
                 + "Ce bloc de code se trouve dans toutes nos boucles while "
                 + "fonctionLancerMissiles();"
                 + "missilesTires++;";
         tab[7] = "A. Version A  B. Version B  C. Version C  D. Version D";
         tab[8] = "A : \"fonctionMoyenne\"\n"
-                + "B : \"fonctionDistanceCibles\"\n"
-                + "C : \"fonctionTrajectoireV\"\n"
-                + "D : \"fonctionCorrectionDesTirs\"";
+                + "\tB : \"fonctionDistanceCibles\"\n"
+                + "\tC : \"fonctionTrajectoireV\"\n"
+                + "\tD : \"fonctionCorrectionDesTirs\"";
         tab[9] = "A : \"void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
-				+ "\tfor(int i=coord.length(); i>0; i--){\n"
+				+ "\t\tfor(int i=coord.length(); i>0; i--){\n"
 				+ "\t\tString temp = Coord[i+1];\n"
 				+ "\t\tcoord[i] = temp;\n"
-				+ "\t} \n"
-				+ "\tcoord[0] = nouvelleCoord;\n"
-				+ "}\"\n"
-				+ "B : void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
-				+ "   for(int i=0; i<coord.lenght()-1; i++){\n"
-				+ "      String temp = Coord[i+1];\n"
-				+ "      coord[i] = temp;\n"
-				+ "    } \n"
-				+ "    coord[0] = nouvelleCoord;\n"
-				+ "}";
+				+ "\t\t} \n"
+				+ "\t\tcoord[0] = nouvelleCoord;\n"
+				+ "\t}\"\n"
+				+ "\tB : void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "\t   for(int i=0; i<coord.lenght()-1; i++){\n"
+				+ "\t      String temp = Coord[i+1];\n"
+				+ "\t      coord[i] = temp;\n"
+				+ "\t    } \n"
+				+ "\t    coord[0] = nouvelleCoord;\n"
+				+ "\t}\n"
+				+ "\tC : \"void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "\t   for(int i=coord.length(); i>0; i--){\n"
+				+ "\t      String temp = Coord[i-1];\n"
+				+ "\t      coord[i] = temp;\n"
+				+ "\t    } \n"
+				+ "\t    coord[0] = nouvelleCoord;\n"
+				+ "\t}\"\n"
+				+ "\tD : \"void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "\t   for(int i=coord.length(); i>=0; i--){\n"
+				+ "\t      String temp = Coord[i-1];\n"
+				+ "\t      coord[i] = temp;\n"
+				+ "\t    } \n"
+				+ "\t    coord[0] = nouvelleCoord;\n"
+				+ "\t}\"";
     }
 
     public static void logs(String reply, User usr, int questionNumber) {

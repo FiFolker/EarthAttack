@@ -93,7 +93,7 @@ public class Question {
             System.out.print(desc[i] + SYS_LINE_SEP);
         }
         
-        System.out.println("\t"+allA);
+        System.out.println("\n\t"+allA);
     }
     
     /***
