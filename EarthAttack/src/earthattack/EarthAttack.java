@@ -59,6 +59,7 @@ public class EarthAttack {
             choice = input.nextInt();
         } catch (InputMismatchException ex) {
             input.next();
+            choice = 0;
             System.out.println("Il faut rentrer un nombre entier compris dans les choix possibles !");
         }
         return choice;
