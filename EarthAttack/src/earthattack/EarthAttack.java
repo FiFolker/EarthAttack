@@ -1,10 +1,14 @@
 package earthattack;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.InputMismatchException;
@@ -26,7 +30,7 @@ public class EarthAttack {
         "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "order",
         "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "leaderboard",
         "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "logs"};
-    static int numberOfQuestion = 7;
+    static int numberOfQuestion = 10;
     static final String[] answerSheets = new String[10];
     static Scanner input = new Scanner(System.in);
     private static Duration MAX_DURATION = Duration.ofSeconds(10);
@@ -38,7 +42,11 @@ public class EarthAttack {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        try {
+            System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new InternalError("VM does not support mandatory encoding UTF-8");
+        }
         // Loads all the answers in the answer sheet.
         initialiseAnswers(answerSheets);
         // Loads all the users from the leaderboard.
@@ -47,9 +55,9 @@ public class EarthAttack {
 
     }
 
-    /**php include html
-     * Check for a int scanner if the answer is also a int for catch the
-     * exception if it's not an int
+    /**
+     * php include html Check for a int scanner if the answer is also a int for
+     * catch the exception if it's not an int
      *
      * @param input Scanner
      * @param choice int answer
@@ -208,7 +216,7 @@ public class EarthAttack {
      */
     static void play(Question[] questions) {
         Duration elapsedTime;
-        int i = 0;
+        int nbGoodAnswers = 0;
         String reply = "";
         boolean correctAnswer = false, timeExpired = MAX_DURATION.isNegative();
         // Asks the user to choose their username.
@@ -222,35 +230,36 @@ public class EarthAttack {
             }
             elapsedTime = Duration.between(startTime, Instant.now());
             UI.showEarth();
-            questions[i].showQuestion(answerSheets[i]);
+            questions[nbGoodAnswers].showQuestion(answerSheets[nbGoodAnswers]);
             reply = input.next();
-            logs(reply, usr, i);
-            correctAnswer = reply.toLowerCase().equals(questions[i].answer);
+            logs(reply, usr, nbGoodAnswers);
+            correctAnswer = reply.toLowerCase().equals(questions[nbGoodAnswers].answer);
             if (correctAnswer) {
                 System.out.println("Bonne réponse !");
                 try {
-                    if (i != questions.length && options[0].equals("true")) {
+                    if (nbGoodAnswers != questions.length && options[0].equals("true")) {
                         loadingNextAnswer(correctAnswer);
                     }
                 } catch (Exception ex) {
                     System.out.println("le loading next answer a fait n'imp " + ex);
                     ex.printStackTrace();
                 }
-                i++;
-            } else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
+                nbGoodAnswers++;
+                correctAnswer = false;
+            } else if ((reply.toLowerCase().charAt(0) > 'a' && reply.toLowerCase().charAt(0) > 'd') && !correctAnswer) {
                 System.out.println("Perdu ... vous avez perdu " + penalty + " sec !");
                 MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(penalty));
-				Duration tempElapsed = Duration.between(startTime, Instant.now());
-				tempElapsed = MAX_DURATION.minus(tempElapsed);
-				if(tempElapsed.getSeconds() > 0){
-					System.out.println("Il vous reste maintenant " + (tempElapsed.toString().substring(2, 7) + "S"));
-				}
+                Duration tempElapsed = Duration.between(startTime, Instant.now());
+                tempElapsed = MAX_DURATION.minus(tempElapsed);
+                if (tempElapsed.getSeconds() > 0) {
+                    System.out.println("Il vous reste maintenant " + (tempElapsed.toString().substring(2, 7) + "S"));
+                }
             } else {
                 System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
             }
-        } while (i < questions.length && MAX_DURATION.getSeconds() - elapsedTime.getSeconds() > 0 && !timeExpired);
+        } while (nbGoodAnswers < questions.length && MAX_DURATION.getSeconds() - elapsedTime.getSeconds() > 0 && !timeExpired);
 
-        if (MAX_DURATION.getSeconds() > 0) {
+        if (MAX_DURATION.getSeconds() > 0 && nbGoodAnswers == numberOfQuestion) {
             usr.score = MAX_DURATION.getSeconds() - elapsedTime.getSeconds();
             System.out.println("GAGNÉ !");
             UI.showGoodEnd();
@@ -304,7 +313,7 @@ public class EarthAttack {
         String[] order = new String[numberOfQuestion];
 
         for (int i = 0; i < FILES.length; i++) {
-            try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
+            try ( Scanner fileRead = new Scanner(new File(FILES[i]))) {
                 if (!fileRead.hasNextLine()) {
                     break;
                 }
@@ -314,8 +323,8 @@ public class EarthAttack {
 
                 switch (i) {
                     case 0:
-                        for (int j = 0; j < split.length; j++) {
-                            String[] tempSplit = split[j].split(",");
+                        for (int j = 0; j < numberOfQuestion; j++) {
+                            String[] tempSplit = split[j].split("#");
                             nameAndDesc[j][0] = tempSplit[0];
                             nameAndDesc[j][1] = tempSplit[1];
                         }
@@ -348,10 +357,10 @@ public class EarthAttack {
     static void initialiseAnswers(String[] tab) {
         tab[0] = "A : \"int\"    B: \"double\"     C:\"boolean\"    D:\"String\"";
         tab[1] = "A : \" ; \"        B: \" , \"            C: \" : \"      D : \" ! \" ";
-        tab[2] = "A : \"MissileArme  || Aporté  && NonFonctionnel\"        \n"
-                + "B: \" MissileArme && Aporté &&  NonFonctionnel\"            \n"
-                + "C: \" MissileArme && Aporté  !NonFonctionnel\"      \n"
-                + "D : \"MissileArme && Aporté  && NonFonctionnel\" ";
+        tab[2] = "A : \"missileArme  || aporté  && nonFonctionnel\"        \n"
+                + "B: \"missileArme && aporté &&  nonFonctionnel\"            \n"
+                + "C: \"missileArme && aporté  !nonFonctionnel\"      \n"
+                + "D : \"missileArme && aporté  && nonFonctionnel\" ";
         tab[3] = "A : \"  true \"        B: \"  false  \"            C: \"  -1 \"      D : \" ERREUR \"";
         tab[4] = "A. if (missilePortee > distanceAsteroide && missileTaille > asteroideTaille)\n"
                 + "B. if (missilePortee > distanceAsteroide || missileTaille >= asteroideTaille)\n"
@@ -378,9 +387,14 @@ public class EarthAttack {
                 + "\t//Code\n"
                 + "}\n"
                 + "\n"
-                + "Ce bloc de code se trouve dans toutes nos boucles while ;^FonctionLancerMissiles();^missilesTires++;";
+                + "Ce bloc de code se trouve dans toutes nos boucles while "
+                + "fonctionLancerMissiles();"
+                + "missilesTires++;";
         tab[7] = "A. Version A  B. Version B  C. Version C  D. Version D";
-        tab[8] = "";
+        tab[8] = "A : \"fonctionMoyenne\"\n"
+                + "B : \"fonctionDistanceCibles\"\n"
+                + "C : \"fonctionTrajectoireV\"\n"
+                + "D : \"fonctionCorrectionDesTirs\"";
         tab[9] = "";
     }
 

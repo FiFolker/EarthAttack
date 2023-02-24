@@ -63,6 +63,12 @@ public class Question {
      * @param nAwnser {@code String} représentant la réponse attribuer à la {@code Question}.
      */
     Question(String nName, String nDesc, String nAwnser){
+        if(nName.contains("@")){
+            nName = nName.replace("@", ";");
+        }
+        if(nDesc.contains("@")){
+            nDesc = nDesc.replace("@", ";");
+        }
         this.name = nName;
         this.description = nDesc;
         this.answer = nAwnser;
@@ -81,7 +87,6 @@ public class Question {
             System.out.print("\t");
             System.out.print(name[i] + SYS_LINE_SEP);
         }
-        System.out.println("");
         String[] desc = Question.formatLine(this.description,Q_LINE_SEP);
         for(int i =0;i<desc.length;i++){
             System.out.print("\t");
