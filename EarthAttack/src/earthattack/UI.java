@@ -247,7 +247,7 @@ public class UI {
             System.out.println();
             System.out.println("\n1) Menu");
             System.out.println("/!\\Faites 1 pour retourner au Menu/!\\");
-            choice = EarthAttack.input.nextInt();
+            choice = EarthAttack.checkIfScannerIsInt(EarthAttack.input, choice);
         } while (choice != 1);
     }
 

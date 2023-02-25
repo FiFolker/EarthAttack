@@ -1,10 +1,14 @@
 package earthattack;
 
 import java.io.File;
+import java.io.FileDescriptor;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintStream;
 import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.InputMismatchException;
@@ -18,14 +22,15 @@ import java.util.logging.Logger;
  * @author msuzin, calmuller, ellemerle, onaib
  */
 public class EarthAttack {
+
     static final String SYS_SEPARATOR = System.getProperty("file.separator");
-    
-    static final String[] FILES = {"ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"question",
-                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"answer",
-                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"order",
-                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"leaderboard",
-                                    "ressources"+SYS_SEPARATOR+"data"+SYS_SEPARATOR+"logs"};
-    static int numberOfQuestion = 3;
+
+    static final String[] FILES = {"ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "question",
+        "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "answer",
+        "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "order",
+        "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "leaderboard",
+        "ressources" + SYS_SEPARATOR + "data" + SYS_SEPARATOR + "logs"};
+    static int numberOfQuestion = 10;
     static final String[] answerSheets = new String[10];
     static Scanner input = new Scanner(System.in);
     private static Duration MAX_DURATION = Duration.ofSeconds(1200);
@@ -37,18 +42,22 @@ public class EarthAttack {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        try {
+            System.setOut(new PrintStream(new FileOutputStream(FileDescriptor.out), true, "UTF-8"));
+        } catch (UnsupportedEncodingException e) {
+            throw new InternalError("VM does not support mandatory encoding UTF-8");
+        }
         // Loads all the answers in the answer sheet.
         initialiseAnswers(answerSheets);
         // Loads all the users from the leaderboard.
         User.initialiseUsers();
         menu();
-        
+
     }
 
     /**
-     * Check for a int scanner if the answer is also a int for catch the
-     * exception if it's not an int
+     * php include html Check for a int scanner if the answer is also a int for
+     * catch the exception if it's not an int
      *
      * @param input Scanner
      * @param choice int answer
@@ -72,7 +81,7 @@ public class EarthAttack {
         Question[] questionLoaded = loadQuestions();
         int choice = 0;
         do {
-            switch(options[1]){
+            switch (options[1]) {
                 case "easy":
                     penalty = 20;
                     break;
@@ -108,7 +117,6 @@ public class EarthAttack {
 
     }
 
-    
     /**
      * Function that handles the options menu.
      */
@@ -137,7 +145,6 @@ public class EarthAttack {
         }
     }
 
-    
     /**
      * Function that handles the difficulty menu.
      */
@@ -174,7 +181,6 @@ public class EarthAttack {
         }
     }
 
-    
     /**
      * Function that handles the roleplay menu.
      */
@@ -211,7 +217,7 @@ public class EarthAttack {
      */
     static void play(Question[] questions) {
         Duration elapsedTime;
-        int i = 0;
+        int nbGoodAnswers = 0;
         String reply = "";
         boolean correctAnswer = false, timeExpired = MAX_DURATION.isNegative();
         // Asks the user to choose their username.
@@ -225,30 +231,37 @@ public class EarthAttack {
             }
             elapsedTime = Duration.between(startTime, Instant.now());
             UI.showEarth();
-            questions[i].showQuestion(answerSheets[i]);
+            questions[nbGoodAnswers].showQuestion(answerSheets[nbGoodAnswers]);
+			System.out.print("\nSaisir réponse :\n>>");
             reply = input.next();
-            logs(reply, usr, i);
-            correctAnswer = reply.toLowerCase().equals(questions[i].answer);
+            logs(reply, usr, nbGoodAnswers);
+            correctAnswer = reply.toLowerCase().equals(questions[nbGoodAnswers].answer);
             if (correctAnswer) {
                 System.out.println("Bonne réponse !");
                 try {
-                    if (i != questions.length && options[0].equals("true")) {
+                    if (nbGoodAnswers != questions.length && options[0].equals("true")) {
                         loadingNextAnswer(correctAnswer);
                     }
                 } catch (Exception ex) {
                     System.out.println("le loading next answer a fait n'imp " + ex);
                     ex.printStackTrace();
                 }
-                i++;
-            } else if (reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') {
-                System.out.println("Perdu ... vous avez perdu " + penalty + " sec !");
+                nbGoodAnswers++;
+                correctAnswer = false;
+            } else if ((reply.toLowerCase().charAt(0) >= 'a' && reply.toLowerCase().charAt(0) <= 'd') && !correctAnswer && reply.toCharArray().length == 1) {
+				System.out.println("Perdu ... vous avez perdu " + penalty + " sec !");
                 MAX_DURATION = MAX_DURATION.minus(Duration.ofSeconds(penalty));
+                Duration tempElapsed = Duration.between(startTime, Instant.now());
+                tempElapsed = MAX_DURATION.minus(tempElapsed);
+                if (tempElapsed.getSeconds() > 0) {
+                    System.out.println("Il vous reste maintenant " + (tempElapsed.toString().substring(2, 7) + "S"));
+                }
             } else {
-                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd'");
+                System.out.println("ASSUREZ VOUS DE REPONDRE AVEC 'a' 'b' 'c' ou 'd' ET DE NE FOURNIR QU'UN SEUL CARACTERE");
             }
-        } while (i < questions.length && MAX_DURATION.getSeconds() - elapsedTime.getSeconds() > 0 && !timeExpired);
+        } while (nbGoodAnswers < questions.length && MAX_DURATION.getSeconds() - elapsedTime.getSeconds() > 0 && !timeExpired);
 
-        if (MAX_DURATION.getSeconds() > 0) {
+        if (MAX_DURATION.getSeconds() > 0 && nbGoodAnswers == numberOfQuestion) {
             usr.score = MAX_DURATION.getSeconds() - elapsedTime.getSeconds();
             System.out.println("GAGNÉ !");
             UI.showGoodEnd();
@@ -302,16 +315,18 @@ public class EarthAttack {
         String[] order = new String[numberOfQuestion];
 
         for (int i = 0; i < FILES.length; i++) {
-            try (Scanner fileRead = new Scanner(new File(FILES[i]))) {
-                if(!fileRead.hasNextLine()){break;}
+            try ( Scanner fileRead = new Scanner(new File(FILES[i]))) {
+                if (!fileRead.hasNextLine()) {
+                    break;
+                }
                 temp = fileRead.nextLine();
 
                 String[] split = temp.split(";");
 
                 switch (i) {
                     case 0:
-                        for (int j = 0; j < split.length; j++) {
-                            String[] tempSplit = split[j].split(",");
+                        for (int j = 0; j < numberOfQuestion; j++) {
+                            String[] tempSplit = split[j].split("#");
                             nameAndDesc[j][0] = tempSplit[0];
                             nameAndDesc[j][1] = tempSplit[1];
                         }
@@ -342,21 +357,78 @@ public class EarthAttack {
      * @param tab tableau contenants l'entiérté des réponses
      */
     static void initialiseAnswers(String[] tab) {
-        tab[0] = "A) c'est pas elle ; B) try 2; C) c'est elle ; D) try 4";
-        tab[1] = "A) c'est elle ; B) try 22; C) try 23; D) c'est pas elle";
-        tab[2] = "";
-        tab[3] = "";
-        tab[4] = "";
-        tab[5] = "";
-        tab[6] = "";
-        tab[7] = "";
-        tab[8] = "";
-        tab[9] = "";
+        tab[0] = "A : \"int\"    B: \"double\"     C:\"boolean\"    D:\"String\"";
+        tab[1] = "A : \" ; \"        B: \" , \"            C: \" : \"      D : \" ! \" ";
+        tab[2] = "A : \"missileArme  || aporté  && nonFonctionnel\"        \n"
+                + "\tB: \"missileArme && aporté &&  nonFonctionnel\"            \n"
+                + "\tC: \"missileArme && aporté  !nonFonctionnel\"      \n"
+                + "\tD : \"missileArme && aporté  && nonFonctionnel\" ";
+        tab[3] = "A : \" true \"        B: \" false \"            C: \" -1 \"      D : \" ERREUR \"";
+        tab[4] = "A. if (missilePortee > distanceAsteroide && missileTaille > asteroideTaille)\n"
+                + "\tB. if (missilePortee > distanceAsteroide || missileTaille >= asteroideTaille)\n"
+                + "\tC. if (missilePortee >= distanceAsteroide || missileTaille < asteroideTaille)\n"
+                + "\tD. if (missilePortee == distanceAsteroide || missileTaille <= asteroideTaille)";
+        tab[5] = "A. for (int i = 10; i > 0; i--)\n"
+                + "\tB. for (int i = 1; i <= 10; i++)\n"
+                + "\tC. for (int i = 0; i < 10; i++)\n"
+                + "\tD. for (int i = 0; i <= 10; i++)";
+        tab[6] = "A.\n"
+                + "\twhile (missilesTires < 3) {\n"
+                + "\t\t//Code\n"
+                + "\t}\n"
+                + "\tB.\n"
+                + "\twhile (missilesTires <= 3) {\n"
+                + "\t\t//Code\n"
+                + "\t}\n"
+                + "\tC.\n"
+                + "\twhile (missilesTires != 3) {\n"
+                + "\t\t//Code\n"
+                + "\t}\n"
+                + "\tD.\n"
+                + "\twhile (missilesTires > 3) {\n"
+                + "\t\t//Code\n"
+                + "\t}\n"
+                + "\n"
+                + "Ce bloc de code se trouve dans toutes nos boucles while "
+                + "fonctionLancerMissiles();"
+                + "missilesTires++;";
+        tab[7] = "A. Version A  B. Version B  C. Version C  D. Version D";
+        tab[8] = "A : \"fonctionMoyenne\"\n"
+                + "\tB : \"fonctionDistanceCibles\"\n"
+                + "\tC : \"fonctionTrajectoireV\"\n"
+                + "\tD : \"fonctionCorrectionDesTirs\"";
+        tab[9] = "A : \"void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "\t\tfor(int i=coord.length(); i>0; i--){\n"
+				+ "\t\tString temp = Coord[i+1];\n"
+				+ "\t\tcoord[i] = temp;\n"
+				+ "\t\t} \n"
+				+ "\t\tcoord[0] = nouvelleCoord;\n"
+				+ "\t}\"\n"
+				+ "\tB : void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "\t   for(int i=0; i<coord.lenght()-1; i++){\n"
+				+ "\t      String temp = Coord[i+1];\n"
+				+ "\t      coord[i] = temp;\n"
+				+ "\t    } \n"
+				+ "\t    coord[0] = nouvelleCoord;\n"
+				+ "\t}\n"
+				+ "\tC : \"void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "\t   for(int i=coord.length(); i>0; i--){\n"
+				+ "\t      String temp = Coord[i-1];\n"
+				+ "\t      coord[i] = temp;\n"
+				+ "\t    } \n"
+				+ "\t    coord[0] = nouvelleCoord;\n"
+				+ "\t}\"\n"
+				+ "\tD : \"void actualiseCoordonnee(String[] coord, String nouvelleCoord){\n"
+				+ "\t   for(int i=coord.length(); i>=0; i--){\n"
+				+ "\t      String temp = Coord[i-1];\n"
+				+ "\t      coord[i] = temp;\n"
+				+ "\t    } \n"
+				+ "\t    coord[0] = nouvelleCoord;\n"
+				+ "\t}\"";
     }
-    
-    
+
     public static void logs(String reply, User usr, int questionNumber) {
-        
+
         try {
             FileWriter fileWriter = new FileWriter(FILES[4], true);
             PrintWriter logs = new PrintWriter(fileWriter);
@@ -369,7 +441,7 @@ public class EarthAttack {
         } catch (IOException ex) {
             System.out.println("Erreur d'écriture : " + ex);
         }
-        
+
     }
 
 }
